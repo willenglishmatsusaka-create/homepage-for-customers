@@ -440,3 +440,6 @@ html[lang="en"] .hero-title { letter-spacing: .02em; }
 .first-grid h3, .room-card h3, .scene-list h3, .flow-list h3, .partner h3 { letter-spacing: .04em; }
 .hero-title span:nth-child(2) { color: var(--ivory); }
 .faq summary { letter-spacing: .03em; }
+.photo-scene { aspect-ratio: 4 / 5; margin-bottom: 22px; }
+.scene-list li { border-top: 0; padding-top: 0; }
+.scene-list h3 { border-top: 1px solid var(--wood); padding-top: 18px; }
