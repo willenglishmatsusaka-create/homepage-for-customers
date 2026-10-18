@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bien-manger-demo",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    // Instagram のユーザー名（@ なし）。確認後に設定してください。
+    "IG_USERNAME": ""
+  },
+  // 30分ごとに最新投稿を取得
+  "triggers": { "crons": ["*/30 * * * *"] },
+  "analytics_engine_datasets": [
+    { "binding": "EVENTS", "dataset": "bien_manger_events" }
+  ]
+  // Instagram 連携時に有効化（README 参照）:
+  // "kv_namespaces": [{ "binding": "IG_KV", "id": "<wrangler kv namespace create IG_KV の id>" }]
+}

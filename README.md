@@ -1,0 +1,58 @@
+# BIEN MANGER（ヴィアン マンジェ）ホームページ リニューアル案
+
+京都・丸太町のフランス料理店 BIEN MANGER（https://bien-manger.jp/）向けのリニューアル提案デモです。
+Cloudflare Workers（静的アセット＋API）だけで動きます。
+
+## 構成
+
+```
+public/            静的サイト（index.html / assets/styles.css / assets/main.js）
+src/index.js       Worker：/api/instagram（最新投稿）、/api/event（クリック計測）、Cron
+wrangler.jsonc     Cloudflare 設定
+```
+
+- **Instagram 連携**：Cron（30分ごと）で Instagram API から最新12件を取得して KV に保存。ページは `/api/instagram` を読むので、新しい投稿が自動で反映されます。長期トークン（60日）は7日ごとに自動延長。
+- **トークン未設定時**はデモ用の投稿（固定投稿3本の構成案を含む）を表示します。提案時はこの状態で見せられます。
+- **計測**：予約・電話・地図・Instagram のクリックを Workers Analytics Engine（`bien_manger_events`）に記録。予約完了数は TableCheck 側の数字と照合してください。
+
+## デモ公開（Cloudflare）
+
+```sh
+npm install
+npx wrangler login
+npx wrangler deploy        # → https://bien-manger-demo.<account>.workers.dev
+```
+
+GitHub 連携で自動デプロイする場合は、Cloudflare ダッシュボード → Workers & Pages → Create → Import a repository でこのリポジトリを選択。
+
+## Instagram を本番接続する
+
+1. Instagram アカウントをプロアカウント（ビジネス／クリエイター）に切り替え
+2. Meta for Developers でアプリを作成し「Instagram API with Instagram login」を追加、長期アクセストークンを発行
+3. KV を作成し、`wrangler.jsonc` の `kv_namespaces` のコメントを外して id を設定
+   ```sh
+   npx wrangler kv namespace create IG_KV
+   ```
+4. `wrangler.jsonc` の `IG_USERNAME` にユーザー名を設定
+5. トークンをシークレットとして登録してデプロイ
+   ```sh
+   npx wrangler secret put IG_ACCESS_TOKEN
+   npx wrangler deploy
+   ```
+
+## 店主様に確認すること（ページ上の「要確認」）
+
+| 項目 | 現状の情報 |
+|---|---|
+| 入口価格 | 公式：ランチ¥10,000〜／ディナー¥20,000〜。TableCheck：魚ランチ¥5,000、和牛ハンバーグ¥5,000（¥6,000表記もあり）、赤ワイン煮込み¥7,000、魚＋和牛ステーキ¥8,000、おまかせ¥11,000（旧価格？） |
+| 各コースの提供状況・内容 | 現在も提供中か、品数・構成 |
+| 税・サービス料 | 税込・サ込で統一表記できるか |
+| ドリンク | ペアリング／ノンアル／グラスの価格目安 |
+| 定休日 | 火曜＋不定休（美食めぐり）／月曜＋不定休（TableCheck）で食い違い |
+| 所要時間・服装・子ども・キャンセル | FAQ の記載内容 |
+| 席構成 | 全12席の内訳（カウンター／テーブル） |
+| シェフの言葉・経歴 | 引用文はたたき台。経歴の年や役職の正確な表記 |
+| Instagram | アカウントID（「ビアンマンジェ京都」）、プロアカウント化 |
+| 写真 | シェフ、万葉牛、カウンター、テーブル、入口・外観、ワイン |
+
+ページ冒頭の「提案用デモ」バーと `.q`（要確認タグ）は、確定後に削除します。
