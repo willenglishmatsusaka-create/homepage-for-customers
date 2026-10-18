@@ -36,6 +36,22 @@ GitHub 連携で自動デプロイする場合は、Cloudflare ダッシュボ�
    npx wrangler deploy
    ```
 
+## 写真の差し替え
+
+`public/assets/photos/` に次のファイル名で JPEG を置くと、ページに自動で表示されます（無い場合は仮の枠が出ます）。
+横長 2000px 前後・300KB 程度が目安です。
+
+| ファイル名 | 使われる場所 |
+|---|---|
+| hero-1.jpg 〜 hero-5.jpg | トップのカルーセル（万葉牛／カウンター／前菜／ワイン／外観） |
+| chef.jpg | シェフ紹介（縦長 3:4） |
+| beef.jpg | 万葉牛 |
+| wine.jpg | ワイン |
+| counter.jpg / table.jpg / exterior.jpg | 店内とお過ごし方 |
+| entrance.jpg | アクセス（入口） |
+
+Instagram 連携後は、最新投稿の写真3枚もカルーセルに自動で追加されます。
+
 ## 店主様に確認すること（ページ上の「要確認」）
 
 | 項目 | 現状の情報 |

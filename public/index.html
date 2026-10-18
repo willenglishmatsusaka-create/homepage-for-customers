@@ -55,8 +55,15 @@
 <main>
 
   <!-- ===== Hero ===== -->
-  <section class="hero">
-    <div class="hero-glow" aria-hidden="true"></div>
+  <section class="hero" aria-roledescription="carousel" aria-label="お店の写真">
+    <div class="hero-slides" id="hero-slides">
+      <figure class="hero-slide is-active" style="--img: url('/assets/photos/hero-1.jpg'); --tone: 12deg"><figcaption>万葉牛のロースト</figcaption></figure>
+      <figure class="hero-slide" style="--img: url('/assets/photos/hero-2.jpg'); --tone: 28deg"><figcaption>カウンターで仕上げる一皿</figcaption></figure>
+      <figure class="hero-slide" style="--img: url('/assets/photos/hero-3.jpg'); --tone: 40deg"><figcaption>季節の野菜の前菜</figcaption></figure>
+      <figure class="hero-slide" style="--img: url('/assets/photos/hero-4.jpg'); --tone: 345deg"><figcaption>ソムリエとシェフが選ぶワイン</figcaption></figure>
+      <figure class="hero-slide" style="--img: url('/assets/photos/hero-5.jpg'); --tone: 24deg"><figcaption>新町通の佇まい</figcaption></figure>
+    </div>
+    <div class="hero-shade" aria-hidden="true"></div>
     <div class="hero-inner">
       <p class="eyebrow">KYOTO ・ MARUTAMACHI ・ FRENCH × WAGYU</p>
       <h1 class="hero-title">
@@ -77,6 +84,11 @@
         <a class="btn btn-ghost" href="#courses">コースと料金を見る</a>
       </div>
       <p class="hero-note">どなたでもご予約いただけます。初めての方も、お一人様も歓迎いたします。</p>
+    </div>
+    <div class="hero-controls">
+      <button type="button" class="hero-arrow" data-dir="-1" aria-label="前の写真">‹</button>
+      <div class="hero-dots" id="hero-dots" role="tablist"></div>
+      <button type="button" class="hero-arrow" data-dir="1" aria-label="次の写真">›</button>
     </div>
     <a class="scroll-cue" href="#first" aria-label="下へスクロール"><span></span></a>
   </section>
@@ -111,7 +123,7 @@
   <!-- ===== シェフ ===== -->
   <section class="section chef" id="chef">
     <div class="wrap chef-grid">
-      <figure class="photo photo-tall reveal" style="--tone: 28deg">
+      <figure class="photo photo-tall reveal" style="--img: url('/assets/photos/chef.jpg'); --tone: 28deg">
         <figcaption>写真：シェフ ポートレート（カウンター内・仕上げの手元）</figcaption>
       </figure>
       <div class="chef-body">
@@ -165,7 +177,7 @@
           計算してお出しします。カウンター席では、その仕上げの瞬間を目の前でご覧いただけます。
         </p>
       </div>
-      <figure class="photo photo-wide reveal" style="--tone: 12deg">
+      <figure class="photo photo-wide reveal" style="--img: url('/assets/photos/beef.jpg'); --tone: 12deg">
         <figcaption>写真：万葉牛のロースト（断面・仕上げ）</figcaption>
       </figure>
     </div>
@@ -239,7 +251,7 @@
   <!-- ===== ワイン ===== -->
   <section class="section wine">
     <div class="wrap beef-grid reverse">
-      <figure class="photo photo-wide reveal" style="--tone: 345deg">
+      <figure class="photo photo-wide reveal" style="--img: url('/assets/photos/wine.jpg'); --tone: 345deg">
         <figcaption>写真：ワインセラー・グラスに注ぐ瞬間</figcaption>
       </figure>
       <div class="beef-body">
@@ -266,19 +278,19 @@
       </header>
       <div class="room-grid">
         <article class="room-card reveal">
-          <figure class="photo" style="--tone: 30deg"><figcaption>写真：カウンター席</figcaption></figure>
+          <figure class="photo" style="--img: url('/assets/photos/counter.jpg'); --tone: 30deg"><figcaption>写真：カウンター席</figcaption></figure>
           <h3>カウンター席</h3>
           <p>シェフの手元が見える特等席。焼く音、香り、仕上げの瞬間まで。お一人様、おふたりでのご利用に。</p>
           <p class="meta">1〜2名様におすすめ</p>
         </article>
         <article class="room-card reveal">
-          <figure class="photo" style="--tone: 18deg"><figcaption>写真：テーブル席</figcaption></figure>
+          <figure class="photo" style="--img: url('/assets/photos/table.jpg'); --tone: 18deg"><figcaption>写真：テーブル席</figcaption></figure>
           <h3>テーブル席</h3>
           <p>会話を楽しみながら、落ち着いて過ごせるお席。ご家族やご友人、記念日の会食に。</p>
           <p class="meta">2〜6名様におすすめ</p>
         </article>
         <article class="room-card reveal">
-          <figure class="photo" style="--tone: 40deg"><figcaption>写真：入口・外観</figcaption></figure>
+          <figure class="photo" style="--img: url('/assets/photos/exterior.jpg'); --tone: 40deg"><figcaption>写真：入口・外観</figcaption></figure>
           <h3>貸切のご相談</h3>
           <p>7名様以上、貸切でのご利用はお電話にてご相談ください。</p>
           <p class="meta">TEL 075-275-1080</p>
@@ -352,7 +364,7 @@
           <div><dt>席数</dt><dd>12席</dd></div>
           <div><dt>電話</dt><dd><a href="tel:0752751080" data-track="tel_click" data-label="access">075-275-1080</a></dd></div>
         </dl>
-        <figure class="photo photo-entry reveal" style="--tone: 24deg">
+        <figure class="photo photo-entry reveal" style="--img: url('/assets/photos/entrance.jpg'); --tone: 24deg">
           <figcaption>写真：入口（新町通側から見た外観）</figcaption>
         </figure>
       </div>

@@ -96,21 +96,56 @@ small { font-size: 0.78em; color: var(--ivory-dim); }
 .hero {
   position: relative; overflow: hidden;
   min-height: calc(100svh - 110px);
-  display: flex; align-items: center;
-  padding: 80px 24px 120px;
+  display: flex; align-items: flex-end;
+  padding: 120px 24px 140px;
+  background: #0d0b0a;
+}
+.hero-slides { position: absolute; inset: 0; }
+.hero-slide {
+  --img: none; --tone: 25deg;
+  position: absolute; inset: 0; margin: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 78% 62%, rgba(150, 70, 30, 0.35), transparent 70%),
-    radial-gradient(ellipse 40% 40% at 15% 20%, rgba(194, 164, 107, 0.08), transparent 70%),
+    var(--img) center / cover no-repeat,
+    radial-gradient(ellipse 60% 55% at 72% 58%, hsla(var(--tone), 55%, 30%, .55), transparent 70%),
+    radial-gradient(ellipse 40% 40% at 18% 22%, hsla(var(--tone), 40%, 40%, .12), transparent 70%),
     linear-gradient(180deg, #0d0b0a, var(--ink));
+  opacity: 0; transform: scale(1.06);
+  transition: opacity 1.8s ease, transform 9s linear;
 }
-.hero-glow {
-  position: absolute; right: -10%; bottom: -20%; width: 70vmax; height: 70vmax;
-  background: radial-gradient(circle, rgba(230, 120, 50, 0.16), transparent 60%);
-  filter: blur(20px);
-  animation: ember 9s ease-in-out infinite alternate;
+.hero-slide.is-active { opacity: 1; transform: scale(1); }
+.hero-slide figcaption {
+  position: absolute; right: 28px; bottom: 34px;
+  font-family: var(--serif-ja); font-size: 12px; letter-spacing: .2em; color: rgba(239, 232, 220, .7);
 }
-@keyframes ember { from { opacity: .6; transform: scale(1); } to { opacity: 1; transform: scale(1.08); } }
-.hero-inner { position: relative; max-width: var(--wrap); margin: 0 auto; width: 100%; }
+.hero-shade {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(10, 8, 7, .82) 0%, rgba(10, 8, 7, .45) 55%, rgba(10, 8, 7, .1) 100%),
+    linear-gradient(0deg, rgba(10, 8, 7, .85) 0%, transparent 45%);
+}
+.hero-controls {
+  position: absolute; left: 50%; bottom: 84px; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 18px; z-index: 2;
+}
+.hero-arrow {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--line); background: rgba(18, 15, 13, .4); color: var(--ivory);
+  font-size: 22px; line-height: 1; cursor: pointer; transition: border-color .3s, color .3s;
+}
+.hero-arrow:hover { border-color: var(--gold); color: var(--gold-hi); }
+.hero-dots { display: flex; gap: 10px; }
+.hero-dots button {
+  width: 28px; height: 2px; padding: 0; border: 0; cursor: pointer;
+  background: rgba(239, 232, 220, .3); transition: background .4s, width .4s;
+}
+.hero-dots button[aria-selected="true"] { background: var(--gold); width: 44px; }
+@media (max-width: 640px) {
+  .hero { padding-bottom: 150px; }
+  .hero-shade { background: linear-gradient(0deg, rgba(10, 8, 7, .92) 0%, rgba(10, 8, 7, .55) 60%, rgba(10, 8, 7, .3) 100%); }
+  .hero-slide figcaption { right: 16px; bottom: 132px; }
+  .hero-controls { bottom: 72px; }
+}
+.hero-inner { position: relative; z-index: 1; max-width: var(--wrap); margin: 0 auto; width: 100%; }
 .eyebrow {
   font-family: var(--serif-en); font-size: 13px; letter-spacing: 0.32em;
   color: var(--gold); margin-bottom: 18px;
@@ -150,9 +185,10 @@ small { font-size: 0.78em; color: var(--ivory-dim); }
 
 /* 写真枠（実写真に差し替え） */
 .photo {
-  --tone: 25deg;
+  --tone: 25deg; --img: none;
   position: relative; margin: 0; aspect-ratio: 4 / 3;
   background:
+    var(--img) center / cover no-repeat,
     radial-gradient(ellipse at 30% 30%, hsla(var(--tone), 45%, 38%, .55), transparent 60%),
     radial-gradient(ellipse at 75% 80%, hsla(var(--tone), 60%, 22%, .7), transparent 65%),
     linear-gradient(135deg, #2a221d, #15110f);
@@ -166,6 +202,7 @@ small { font-size: 0.78em; color: var(--ivory-dim); }
   position: absolute; left: 18px; bottom: 14px; right: 18px;
   font-size: 11px; color: rgba(239, 232, 220, .55); letter-spacing: .08em;
 }
+.photo.has-img::after, .photo.has-img figcaption { display: none; }
 .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .photo-tall { aspect-ratio: 3 / 4; }
 .photo-wide { aspect-ratio: 16 / 11; }
@@ -342,6 +379,7 @@ small { font-size: 0.78em; color: var(--ivory-dim); }
 .reveal.is-in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .reveal, .hero-title span { opacity: 1; transform: none; animation: none; transition: none; }
-  .hero-glow, .scroll-cue span { animation: none; }
+  .scroll-cue span { animation: none; }
+  .hero-slide { transition: opacity .6s ease; transform: none; }
 }
 .price-table thead th.r { font-family: var(--sans); font-size: 11px; color: var(--ivory-dim); }

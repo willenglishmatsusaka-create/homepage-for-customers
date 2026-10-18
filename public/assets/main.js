@@ -13,6 +13,80 @@
   const observe = (el) => (io ? io.observe(el) : el.classList.add("is-in"));
   document.querySelectorAll(".reveal").forEach(observe);
 
+  // ---- 写真：画像ファイルが読み込めた枠だけ「仮の枠」表示を外す ----
+  document.querySelectorAll(".photo").forEach((fig) => {
+    const m = /url\(['"]?([^'")]+)/.exec(fig.style.getPropertyValue("--img"));
+    if (!m) return;
+    const img = new Image();
+    img.onload = () => fig.classList.add("has-img");
+    img.src = m[1];
+  });
+
+  // ---- トップのカルーセル ----
+  const hero = {
+    root: document.getElementById("hero-slides"),
+    dots: document.getElementById("hero-dots"),
+    index: 0,
+    timer: null,
+  };
+  const slides = () => [...hero.root.querySelectorAll(".hero-slide")];
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const show = (i) => {
+    const all = slides();
+    hero.index = (i + all.length) % all.length;
+    all.forEach((el, n) => el.classList.toggle("is-active", n === hero.index));
+    [...hero.dots.children].forEach((d, n) => d.setAttribute("aria-selected", String(n === hero.index)));
+  };
+  const play = () => {
+    clearInterval(hero.timer);
+    if (!reduceMotion) hero.timer = setInterval(() => show(hero.index + 1), 6000);
+  };
+  const buildDots = () => {
+    hero.dots.textContent = "";
+    slides().forEach((el, n) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-label", el.querySelector("figcaption")?.textContent || `写真 ${n + 1}`);
+      b.addEventListener("click", () => { show(n); play(); });
+      hero.dots.append(b);
+    });
+    show(hero.index);
+  };
+  if (hero.root) {
+    buildDots();
+    play();
+    document.querySelectorAll(".hero-arrow").forEach((b) =>
+      b.addEventListener("click", () => { show(hero.index + Number(b.dataset.dir)); play(); }));
+    const section = hero.root.closest(".hero");
+    section.addEventListener("mouseenter", () => clearInterval(hero.timer));
+    section.addEventListener("mouseleave", play);
+    let startX = null;
+    section.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    section.addEventListener("touchend", (e) => {
+      if (startX === null) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 50) { show(hero.index + (dx < 0 ? 1 : -1)); play(); }
+      startX = null;
+    });
+  }
+
+  // Instagram の最新写真（実データ時のみ）をカルーセルの後ろに足す
+  const addInstagramSlides = (feed) => {
+    if (!hero.root || feed.demo) return;
+    feed.posts.filter((p) => p.image).slice(0, 3).forEach((p) => {
+      const fig = document.createElement("figure");
+      fig.className = "hero-slide";
+      fig.style.setProperty("--img", `url("${p.image}")`);
+      const cap = document.createElement("figcaption");
+      cap.textContent = "Instagram より";
+      fig.append(cap);
+      hero.root.append(fig);
+    });
+    buildDots();
+  };
+
   // ---- クリック計測（予約・電話・地図・Instagram） ----
   document.addEventListener("click", (ev) => {
     const a = ev.target.closest("[data-track]");
@@ -85,7 +159,7 @@
 
   fetch("/api/instagram")
     .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-    .then(render)
+    .then((feed) => { render(feed); addInstagramSlides(feed); })
     .catch(() => {
       status.textContent = "Instagram の投稿を読み込めませんでした。";
     });
