@@ -150,26 +150,14 @@ function profileUrl(env) {
 }
 
 function demoFeed(env, lang = "ja") {
-  const captions = lang === "en" ? [
-    "First visit? How to book, how long it takes, dress code and dietary requests.",
-    "Courses & prices — lunch and dinner, tax and service explained.",
-    "At the counter, the chef finishes Manyo beef right in front of you.",
-    "Roast Manyo beef. Resting the meat is part of the recipe.",
-    "A starter of seasonal vegetables from Kyoto growers.",
-    "Burgundy and Champagne, chosen by our sommelier and chef to suit Manyo beef.",
-    "Lunch only: the wagyu hamburg course.",
-    "Celebrating? Ask us for a message plate.",
-    "Shinmachi-dori, 5 minutes from Marutamachi Station.",
-  ] : [
-    "初めての方へ｜ご予約からお帰りまで。所要時間・服装・お子様のご利用について。",
-    "コースと料金｜ランチ・ディナーそれぞれの内容と税・サービス料のご案内。",
-    "店内とお過ごし方｜カウンターでは目の前で万葉牛を仕上げます。",
-    "万葉牛のロースト。焼き上がりを休ませる時間も、料理の一部です。",
-    "季節の野菜の前菜。京都の生産者から届いたものを中心に。",
-    "ソムリエとシェフが選ぶ、万葉牛に寄り添うワイン。",
-    "ランチ限定、和牛ハンバーグのコース。",
-    "記念日のディナーに。メッセージプレートも承ります。",
-    "新町通竹屋町。地下鉄丸太町駅から徒歩約5分。",
+  // 連携前は店の写真で「最新投稿」の見え方を再現する
+  const posts = [
+    ["wagyu-steak-closeup", "万葉牛のステーキ。焼き上がりを休ませる時間も、料理の一部です。", "Manyo beef steak, rested before slicing."],
+    ["starters-wine", "前菜の盛り合わせとサンセール。", "Starters with a glass of Sancerre."],
+    ["chef-open-kitchen", "目の前の厨房で、一皿ずつ仕上げます。", "Every plate finished in front of you."],
+    ["kamado-rice", "かまどで炊き上げるご飯で〆に。", "Rice cooked in a kamado pot."],
+    ["table-seats", "テーブル席。記念日の会食にも。", "Our table seating, ideal for celebrations."],
+    ["entrance-noren", "新町通の暖簾をくぐって。", "Through the noren on Shinmachi-dori."],
   ];
   const now = Date.now();
   return {
@@ -177,11 +165,11 @@ function demoFeed(env, lang = "ja") {
     username: env.IG_USERNAME || "",
     profileUrl: profileUrl(env),
     updatedAt: new Date().toISOString(),
-    posts: captions.map((caption, i) => ({
+    posts: posts.map(([photo, ja, en], i) => ({
       id: `demo-${i}`,
       type: "IMAGE",
-      image: null,
-      caption,
+      image: `/assets/photos/${photo}.webp`,
+      caption: lang === "en" ? en : ja,
       permalink: profileUrl(env),
       timestamp: new Date(now - i * 3.5 * 86400000).toISOString(),
     })),

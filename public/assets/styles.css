@@ -461,3 +461,128 @@ html[lang="en"] .hero-title { letter-spacing: .02em; }
   .map-wrap iframe { aspect-ratio: 4 / 3; }
   .faq summary { font-size: 16px; }
 }
+
+/* =========================================================
+   情報量を絞った構成（写真と余白で見せる）
+   ========================================================= */
+
+/* 改行：日本語は文節単位、見出しは行をそろえる */
+:lang(ja) { word-break: auto-phrase; line-break: strict; }
+h1, h2, h3, .band-text, .chef-quote { text-wrap: balance; }
+p, dd, summary { text-wrap: pretty; }
+br.sp { display: none; }
+@media (max-width: 640px) { br.sp { display: inline; } }
+
+/* 要確認タグはボタンで表示切り替え */
+.q { display: none; }
+body.show-q .q { display: inline-block; }
+.demo-bar { font-size: 12px; padding: 6px 16px; }
+.q-toggle {
+  margin-left: 8px; font: inherit; color: inherit; background: none; cursor: pointer;
+  border: 1px solid rgba(240, 207, 201, .5); padding: 1px 10px;
+}
+.q-toggle[aria-pressed="true"] { background: rgba(240, 207, 201, .15); }
+
+/* トップ：写真の下は一言と予約ボタンだけ */
+.hero-inner { display: block; text-align: center; padding: 72px 24px 96px; }
+.hero-title { font-size: clamp(30px, 3.6vw, 44px); letter-spacing: .14em; }
+.hero-title span { display: block; }
+.hero-lead { margin: 22px auto 36px; max-width: 34em; font-size: 16px; color: var(--ivory-dim); letter-spacing: .08em; }
+.hero-inner .btn { min-width: 240px; }
+
+/* セクションの余白を広く、見出しを静かに */
+.section { padding: 132px 0; }
+.section-head { margin-bottom: 56px; }
+.section-head h2 { font-size: clamp(24px, 2.8vw, 32px); letter-spacing: .14em; line-height: 1.7; }
+.chef-body p, .beef-body p { font-size: 16px; line-height: 2.1; }
+.note { font-size: 13px !important; color: var(--wood) !important; letter-spacing: .06em; margin-top: 28px; }
+.chef-quote { font-size: clamp(18px, 2vw, 22px); line-height: 2.1; margin-bottom: 32px; }
+
+/* 全幅の写真の帯 */
+.band {
+  position: relative; min-height: 78vh; display: flex; align-items: flex-end; justify-content: flex-start;
+  background: var(--img) center / cover no-repeat, var(--ink);
+}
+.band::before { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(22, 20, 18, .78), rgba(22, 20, 18, 0) 55%); }
+.band-text {
+  position: relative; margin: 0; padding: 0 8vw 9vh;
+  font-family: var(--serif-ja); font-size: clamp(22px, 2.6vw, 34px); letter-spacing: .16em; line-height: 1.9; color: #fff;
+}
+.band-final { min-height: 70vh; align-items: center; justify-content: center; text-align: center; }
+.band-final::before { background: rgba(22, 20, 18, .55); }
+.band-inner { position: relative; }
+.band-final .band-text { padding: 0 24px 36px; }
+
+/* コースの流れ：3枚ずつ見えるカルーセル */
+.reel { position: relative; margin: 0 0 72px; }
+.reel-track {
+  display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 32px) / 3); gap: 16px;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none;
+}
+.reel-track::-webkit-scrollbar { display: none; }
+.reel-item { margin: 0; scroll-snap-align: start; }
+.reel-item .photo { aspect-ratio: 4 / 5; }
+.reel-item figcaption { margin-top: 14px; font-family: var(--serif-ja); font-size: 15px; letter-spacing: .1em; }
+.reel-item figcaption span { font-family: var(--serif-en); font-style: italic; color: var(--wood); margin-right: 12px; }
+.reel-arrow {
+  position: absolute; top: calc((100% - 40px) / 2 - 22px); width: 44px; height: 44px; border-radius: 50%;
+  border: 0; background: rgba(29, 27, 24, .7); color: #fff; font-size: 22px; cursor: pointer;
+}
+.reel-arrow[data-dir="-1"] { left: -22px; }
+.reel-arrow[data-dir="1"] { right: -22px; }
+@media (max-width: 640px) {
+  .reel-track { grid-auto-columns: 72%; gap: 12px; }
+  .reel-arrow { display: none; }
+}
+
+/* 料金：2列のシンプルな品書き */
+.menu { display: grid; gap: 48px; max-width: 880px; margin: 0 auto; }
+@media (min-width: 820px) { .menu { grid-template-columns: 1fr 1fr; gap: 80px; } }
+.menu-head { display: flex; align-items: baseline; gap: 14px; font-size: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--wood); margin-bottom: 8px; }
+.menu-head span { font-family: var(--serif-en); font-size: 14px; letter-spacing: .3em; color: var(--wood); }
+.menu dl { margin: 0; }
+.menu dl div { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.menu dt { font-size: 15px; }
+.menu dd { margin: 0; font-family: var(--serif-ja); font-size: 18px; white-space: nowrap; }
+.menu-note { font-size: 13px; color: var(--ivory-dim); margin: 12px 0 0; }
+.menu-foot { text-align: center; font-size: 13px; color: var(--ivory-dim); margin: 40px 0 56px; }
+.price-photos { max-width: 880px; margin: 0 auto 8px; }
+
+/* ワインパートナーは名前だけ */
+.partner { align-items: center; }
+.partner h3 { margin: 0; }
+
+/* 店内：写真＋一言 */
+.room-card { margin: 0; }
+.room-card figcaption { margin-top: 20px; }
+.room-card h3 { font-size: 18px; margin: 0 0 6px; letter-spacing: .14em; }
+.room-card p { font-size: 14px; color: var(--ivory-dim); margin: 0; }
+
+/* Instagram：写真のみ、キャプションはホバーで */
+.ig-handle { text-decoration: none; font-family: var(--serif-en); letter-spacing: .08em; }
+.ig-handle:hover { color: var(--wood-hi); }
+.ig-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.ig-item .ig-cap { opacity: 0; transition: opacity .4s; }
+.ig-item:hover .ig-cap { opacity: 1; }
+.ig-item .ig-date { display: none; }
+
+/* アクセス */
+.text-link { color: var(--wood-hi); text-decoration: none; font-size: 14px; letter-spacing: .06em; }
+.text-link:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+  .section { padding: 88px 0; }
+  .hero-inner { padding: 44px 20px 64px; }
+  .hero-title { font-size: 28px; }
+  .band { min-height: 62vh; }
+  .band-text { padding: 0 24px 48px; font-size: 21px; }
+  .ig-grid { grid-template-columns: repeat(3, 1fr); gap: 3px; }
+  .ig-item:nth-child(n+7) { display: none; }
+  .menu dt { font-size: 14px; }
+}
+.nw { white-space: nowrap; }
+.hero-lead { max-width: none; }
+.q { margin-left: .4em; }
+html[lang="en"] .hero-title, html[lang="en"] .section-head h2, html[lang="en"] .band-text,
+html[lang="en"] .chef-quote, html[lang="en"] .room-card h3, html[lang="en"] .reel-item figcaption { letter-spacing: .03em; }
+html[lang="en"] .hero-lead { letter-spacing: .02em; }

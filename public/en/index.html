@@ -35,7 +35,8 @@
 <body>
 
 <div class="demo-bar" role="note">
-  Proposal demo. Items marked <span class="q">TBC</span> are to be confirmed with the restaurant.
+  Proposal demo.
+  <button type="button" class="q-toggle" aria-pressed="false">Show items to confirm</button>
 </div>
 
 <header class="site-header" id="top">
@@ -45,12 +46,10 @@
   </a>
   <nav class="nav" aria-label="Main menu">
     <a href="#chef">Chef</a>
-    <a href="#courses">Menu &amp; Prices</a>
+    <a href="#courses">Menu</a>
     <a href="#room">The Room</a>
-    <a href="#journal">Instagram</a>
-    <a href="#faq">FAQ</a>
     <a href="#access">Access</a>
-    <a class="btn btn-primary btn-sm" href="https://www.tablecheck.com/en/bien-manger/reserve/" target="_blank" rel="noopener" data-track="reserve_click" data-label="header_en">Book a Table</a>
+    <a class="btn btn-primary btn-sm" href="https://www.tablecheck.com/en/bien-manger/reserve/" target="_blank" rel="noopener" data-track="reserve_click" data-label="header_en">Reserve</a>
   </nav>
   <a class="lang" href="/" hreflang="ja" lang="ja" aria-label="日本語">日本語</a>
 </header>
@@ -60,11 +59,11 @@
   <!-- ===== Hero ===== -->
   <section class="hero" aria-roledescription="carousel" aria-label="Photos of the restaurant">
     <div class="hero-slides" id="hero-slides">
-      <figure class="hero-slide is-active" style="--img: url('/assets/photos/wagyu-steak-closeup.webp'); --tone: 28deg"><figcaption>Manyo beef steak</figcaption></figure>
-      <figure class="hero-slide" style="--img: url('/assets/photos/chef-open-kitchen.webp'); --tone: 28deg"><figcaption>An open kitchen, right in front of you</figcaption></figure>
-      <figure class="hero-slide" style="--img: url('/assets/photos/white-asparagus.webp'); --tone: 28deg"><figcaption>A plate of the season</figcaption></figure>
-      <figure class="hero-slide" style="--img: url('/assets/photos/starters-platter.webp'); --tone: 28deg"><figcaption>Starters, plate by plate</figcaption></figure>
-      <figure class="hero-slide" style="--img: url('/assets/photos/entrance-noren.webp'); --tone: 28deg"><figcaption>Through the noren on Shinmachi-dori</figcaption></figure>
+      <figure class="hero-slide is-active" style="--img: url('/assets/photos/wagyu-steak-closeup.webp')"><figcaption>Manyo beef</figcaption></figure>
+      <figure class="hero-slide" style="--img: url('/assets/photos/chef-open-kitchen.webp')"><figcaption>The open kitchen</figcaption></figure>
+      <figure class="hero-slide" style="--img: url('/assets/photos/white-asparagus.webp')"><figcaption>A plate of the season</figcaption></figure>
+      <figure class="hero-slide" style="--img: url('/assets/photos/starters-platter.webp')"><figcaption>Starters</figcaption></figure>
+      <figure class="hero-slide" style="--img: url('/assets/photos/entrance-noren.webp')"><figcaption>The noren on Shinmachi-dori</figcaption></figure>
       <div class="hero-controls">
         <button type="button" class="hero-arrow" data-dir="-1" aria-label="Previous photo">‹</button>
         <div class="hero-dots" id="hero-dots" role="tablist"></div>
@@ -72,63 +71,17 @@
       </div>
     </div>
     <div class="hero-inner">
-      <div class="hero-intro">
-      <p class="eyebrow">KYOTO ・ MARUTAMACHI ・ FRENCH × WAGYU</p>
-      <h1 class="hero-title">
-        <span>Manyo wagyu &amp; the seasons of Kyoto.</span>
-        <span>French cuisine, one plate at a time.</span>
-      </h1>
-      <p class="hero-lead">
-        A chef trained in Alain Ducasse’s kitchens cooks purebred Tajima “Manyo” beef and seasonal
-        vegetables at a 12-seat counter — so you can watch, hear and smell each plate come together.
-      </p>
-      </div>
-      <div class="hero-book">
-      <dl class="hero-facts">
-        <div><dt>Lunch</dt><dd>from ¥5,000 <small>seating 12:00–13:00</small></dd></div>
-        <div><dt>Dinner</dt><dd>from ¥20,000 <small>seating 18:00–19:00</small></dd></div>
-        <div><dt>Location</dt><dd>5 min from Marutamachi Sta.</dd></div>
-      </dl>
-      <div class="hero-cta">
-        <a class="btn btn-primary" href="https://www.tablecheck.com/en/bien-manger/reserve/" target="_blank" rel="noopener" data-track="reserve_click" data-label="hero_en">Check Availability</a>
-        <a class="btn btn-ghost" href="#courses">Menu &amp; Prices</a>
-      </div>
-      <p class="hero-note">Online booking in English, 24 hours a day. First-time and solo guests are always welcome.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== First visit ===== -->
-  <section class="section light first" id="first">
-    <div class="wrap">
-      <header class="section-head">
-        <p class="eyebrow">FOR TRAVELLERS</p>
-        <h2>Planning your visit</h2>
-      </header>
-      <ol class="first-grid">
-        <li class="reveal">
-          <span class="num">01</span>
-          <h3>Easy to book</h3>
-          <p>Reserve online in English via TableCheck. For parties of 7 or more, please call us.</p>
-        </li>
-        <li class="reveal">
-          <span class="num">02</span>
-          <h3>Allow time</h3>
-          <p>Lunch takes about 1.5 hours and dinner about 2.5 hours <span class="q">TBC</span>. Please arrive on time — every course is plated for all guests together.</p>
-        </li>
-        <li class="reveal">
-          <span class="num">03</span>
-          <h3>Dietary needs</h3>
-          <p>Let us know about allergies and restrictions when you book, so the chef can prepare in advance. Same-day changes may not be possible.</p>
-        </li>
-      </ol>
+      <p class="eyebrow">KYOTO ・ FRENCH × WAGYU</p>
+      <h1 class="hero-title"><span>Manyo wagyu &amp; the seasons of Kyoto</span></h1>
+      <p class="hero-lead">French cuisine, finished one plate at a time across the counter.</p>
+      <a class="btn btn-primary" href="https://www.tablecheck.com/en/bien-manger/reserve/" target="_blank" rel="noopener" data-track="reserve_click" data-label="hero_en">Reserve</a>
     </div>
   </section>
 
   <!-- ===== Chef ===== -->
   <section class="section chef" id="chef">
     <div class="wrap chef-grid">
-      <figure class="photo photo-tall reveal" style="--img: url('/assets/photos/chef.jpg'); --tone: 28deg">
+      <figure class="photo photo-tall reveal" style="--img: url('/assets/photos/chef.jpg')">
         <figcaption>Owner-chef Junya Nakanishi</figcaption>
       </figure>
       <div class="chef-body">
@@ -137,27 +90,20 @@
           <h2>Junya Nakanishi</h2>
         </header>
         <blockquote class="chef-quote reveal">
-          “I work closely with our producers and their ingredients, and shape their care into each plate.
-          I hope the time you spend here becomes a memory you keep.”
+          “I work closely with our producers, and shape their care into each plate.”
         </blockquote>
         <p class="reveal">
-          Born in Kyoto, Nakanishi began his career at Chihana, a kaiseki restaurant in Gion, before turning
-          to Western cuisine. In 2002 he moved to New York to cook at Alain Ducasse at the Essex House.
+          From Chihana in Gion to Alain Ducasse at the Essex House in New York, then Alain Ducasse and
+          Pierre Gagnaire in Japan and Hong Kong, and head chef at Aman Tokyo. In 2026 he returned to his
+          home city of Kyoto.
         </p>
-        <p class="reveal">
-          Back in Japan he worked at Beige Alain Ducasse Tokyo, Mandarin Oriental Tokyo and Pierre Gagnaire
-          at Mandarin Oriental Hong Kong, then served as head chef at Armani Caffè, Ueno Fugetsudo and
-          Aman Tokyo. In 2026 he returned to his home city to open BIEN MANGER.
-        </p>
-        <ol class="career reveal" aria-label="Career">
-          <li><span>Kyoto</span>Chihana, Gion</li>
-          <li><span>2002</span>Alain Ducasse at the Essex House, New York</li>
-          <li><span>Japan</span>Beige Alain Ducasse Tokyo ／ Mandarin Oriental Tokyo ／ Pierre Gagnaire, Mandarin Oriental Hong Kong</li>
-          <li><span>Head chef</span>Armani Caffè ／ Ueno Fugetsudo ／ Aman Tokyo</li>
-          <li><span>2026</span>Opens BIEN MANGER in Kyoto</li>
-        </ol>
       </div>
     </div>
+  </section>
+
+  <!-- ===== Photo band ===== -->
+  <section class="band" style="--img: url('/assets/photos/counter-seats.webp')" aria-label="The counter">
+    <p class="band-text reveal">A single slab of hinoki.<br>The sound and scent of every sear.</p>
   </section>
 
   <!-- ===== Manyo beef ===== -->
@@ -169,89 +115,62 @@
           <h2>Purebred Tajima wagyu</h2>
         </header>
         <p class="reveal">
-          Manyo beef comes only from the pure Tajima bloodline — the same lineage behind Kobe beef — raised
-          in small numbers by dedicated farmers in Inaba, Tottori. Delicate yet deep in flavour, its fat melts
-          cleanly and leaves a long, elegant finish. BIEN MANGER is a certified Manyo beef restaurant (No. 119).
+          A rare bloodline, raised with pride in Inaba, Tottori. Delicate yet deep, with a long, elegant finish —
+          cooked as French cuisine.
         </p>
-        <p class="reveal">
-          Each cut is cooked differently, then rested before it is sliced. From the counter you can watch
-          that final moment up close.
-        </p>
+        <p class="note reveal">Certified Manyo beef restaurant, No. 119</p>
       </div>
-      <figure class="photo photo-wide reveal" style="--img: url('/assets/photos/beef.jpg'); --tone: 12deg">
+      <figure class="photo photo-wide reveal" style="--img: url('/assets/photos/beef.jpg')">
         <figcaption>Manyo beef</figcaption>
       </figure>
     </div>
   </section>
 
-  <!-- ===== Course flow ===== -->
-  <section class="section flow">
-    <div class="wrap">
-      <header class="section-head">
-        <p class="eyebrow">THE EXPERIENCE</p>
-        <h2>A dinner, course by course <small>(example)</small></h2>
-        <p class="sub">The menu changes with the season and the market. <span class="q">TBC</span></p>
-      </header>
-      <div class="flow-photos reveal">
-        <figure class="photo" style="--img: url('/assets/photos/starters-wine.webp'); --tone: 30deg"><figcaption>Starters with Sancerre</figcaption></figure>
-        <figure class="photo" style="--img: url('/assets/photos/fish-dish.webp'); --tone: 30deg"><figcaption>Fish course</figcaption></figure>
-        <figure class="photo" style="--img: url('/assets/photos/kamado-rice.webp'); --tone: 30deg"><figcaption>Kamado-cooked rice</figcaption></figure>
-      </div>
-      <ol class="flow-list">
-        <li class="reveal"><span class="flow-no">I</span><h3>Amuse-bouche</h3><p>A first taste of the season.</p></li>
-        <li class="reveal"><span class="flow-no">II</span><h3>Starter</h3><p>Kyoto vegetables take the lead.</p></li>
-        <li class="reveal"><span class="flow-no">III</span><h3>Soup</h3><p>Often a potage that draws out the vegetables’ sweetness.</p></li>
-        <li class="reveal"><span class="flow-no">IV</span><h3>Fish</h3><p>The day’s catch, with a classic sauce.</p></li>
-        <li class="reveal"><span class="flow-no">V</span><h3>Manyo beef</h3><p>Seared, rested and carved in front of you.</p></li>
-        <li class="reveal"><span class="flow-no">VI</span><h3>Kamado rice</h3><p>Rice cooked in a traditional kamado pot, served fresh.</p></li>
-        <li class="reveal"><span class="flow-no">VII</span><h3>Dessert &amp; coffee</h3><p>Take your time.</p></li>
-      </ol>
-    </div>
-  </section>
-
-  <!-- ===== Menu & prices ===== -->
+  <!-- ===== Menu ===== -->
   <section class="section light courses" id="courses">
     <div class="wrap">
       <header class="section-head">
-        <p class="eyebrow">MENU &amp; PRICES</p>
-        <h2>Courses</h2>
-        <p class="sub">Per person, tax and service included <span class="q">TBC</span>. Drinks are extra. No tipping is expected in Japan.</p>
+        <p class="eyebrow">CUISINE</p>
+        <h2>Menu</h2>
       </header>
-
-      <div class="price-block reveal">
-        <div class="price-photos">
-          <figure class="photo" style="--img: url('/assets/photos/wagyu-steak-lunch.webp'); --tone: 30deg"><figcaption>Wagyu steak lunch</figcaption></figure>
-          <figure class="photo" style="--img: url('/assets/photos/hamburg-lunch-wine.webp'); --tone: 30deg"><figcaption>Wagyu hamburg lunch with red wine</figcaption></figure>
+      <div class="reel reveal" data-reel>
+        <div class="reel-track">
+          <figure class="reel-item"><div class="photo" style="--img: url('/assets/photos/starters-platter.webp')"></div><figcaption><span>I</span>Starters</figcaption></figure>
+          <figure class="reel-item"><div class="photo" style="--img: url('/assets/photos/starters-wine.webp')"></div><figcaption><span>II</span>Starters &amp; wine</figcaption></figure>
+          <figure class="reel-item"><div class="photo" style="--img: url('/assets/photos/white-asparagus.webp')"></div><figcaption><span>III</span>A plate of the season</figcaption></figure>
+          <figure class="reel-item"><div class="photo" style="--img: url('/assets/photos/fish-dish.webp')"></div><figcaption><span>IV</span>Fish</figcaption></figure>
+          <figure class="reel-item"><div class="photo" style="--img: url('/assets/photos/wagyu-steak-closeup.webp')"></div><figcaption><span>V</span>Manyo beef</figcaption></figure>
+          <figure class="reel-item"><div class="photo" style="--img: url('/assets/photos/kamado-rice.webp')"></div><figcaption><span>VI</span>Kamado rice</figcaption></figure>
         </div>
-        <h3 class="price-head"><span>LUNCH</span>Lunch <small>seating 12:00–13:00 ／ an easy way to try Manyo beef</small></h3>
-        <table class="price-table">
-          <thead><tr><th scope="col">Course</th><th scope="col">Includes</th><th scope="col" class="r">Price</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">Fish lunch</th><td>Starter, soup, fish of the day, petit dessert <span class="q">TBC</span></td><td class="r">¥5,000</td></tr>
-            <tr><th scope="row">Wagyu hamburg lunch</th><td>Starter, soup, 150 g Tajima wagyu hamburg steak, truffle rice, petit dessert</td><td class="r">¥5,000<br><small>with soft drink ¥6,000 <span class="q">TBC</span></small></td></tr>
-            <tr><th scope="row">Wagyu braised in red wine</th><td>Starter, soup, wagyu braised in red wine, petit dessert <span class="q">TBC</span></td><td class="r">¥7,000</td></tr>
-            <tr><th scope="row">Fish &amp; wagyu steak lunch</th><td>Starter, soup, fish, Manyo beef steak, dessert <span class="q">TBC</span></td><td class="r">¥8,000</td></tr>
-            <tr class="feature"><th scope="row">Chef’s tasting lunch</th><td>Omakase course <span class="q">TBC</span></td><td class="r">from ¥10,000</td></tr>
-          </tbody>
-        </table>
+        <button type="button" class="reel-arrow" data-dir="-1" aria-label="Previous">‹</button>
+        <button type="button" class="reel-arrow" data-dir="1" aria-label="Next">›</button>
       </div>
 
-      <div class="price-block reveal">
-        <h3 class="price-head"><span>DINNER</span>Dinner <small>seating 18:00–19:00 ／ for anniversaries and special evenings</small></h3>
-        <table class="price-table">
-          <thead><tr><th scope="col">Course</th><th scope="col">Includes</th><th scope="col" class="r">Price</th></tr></thead>
-          <tbody>
-            <tr class="feature"><th scope="row">Chef’s tasting menu</th><td>7–8 courses, from amuse-bouche through Manyo beef to dessert <span class="q">TBC</span></td><td class="r">from ¥20,000</td></tr>
-          </tbody>
-        </table>
+      <div class="menu reveal">
+        <div class="menu-col">
+          <h3 class="menu-head"><span>DINNER</span></h3>
+          <dl>
+            <div><dt>Chef’s tasting menu</dt><dd>from ¥20,000</dd></div>
+          </dl>
+          <p class="menu-note">Seating 18:00–19:00</p>
+        </div>
+        <div class="menu-col">
+          <h3 class="menu-head"><span>LUNCH</span></h3>
+          <dl>
+            <div><dt>Chef’s tasting menu</dt><dd>from ¥10,000</dd></div>
+            <div><dt>Fish &amp; Manyo beef steak</dt><dd>¥8,000</dd></div>
+            <div><dt>Wagyu braised in red wine</dt><dd>¥7,000</dd></div>
+            <div><dt>Wagyu hamburg steak</dt><dd>¥5,000</dd></div>
+            <div><dt>Fish</dt><dd>¥5,000</dd></div>
+          </dl>
+          <p class="menu-note">Seating 12:00–13:00</p>
+        </div>
       </div>
-
-      <div class="drink-row reveal">
-        <div><h4>Wine pairing</h4><p>from ¥— <span class="q">TBC</span></p></div>
-        <div><h4>Non-alcoholic pairing</h4><p>from ¥— <span class="q">TBC</span></p></div>
-        <div><h4>Wine by the glass</h4><p>from ¥— <span class="q">TBC</span></p></div>
+      <p class="menu-foot reveal">Tax and service included<span class="q">TBC</span>. Drinks extra; wine pairing available. No tipping.</p>
+      <div class="price-photos reveal">
+        <figure class="photo" style="--img: url('/assets/photos/wagyu-steak-lunch.webp')"><figcaption>Manyo beef steak lunch</figcaption></figure>
+        <figure class="photo" style="--img: url('/assets/photos/hamburg-lunch-wine.webp')"><figcaption>Wagyu hamburg lunch</figcaption></figure>
       </div>
-
       <div class="center">
         <a class="btn btn-primary" href="https://www.tablecheck.com/en/bien-manger/reserve/" target="_blank" rel="noopener" data-track="reserve_click" data-label="courses_en">Check Availability</a>
       </div>
@@ -261,24 +180,20 @@
   <!-- ===== Wine ===== -->
   <section class="section wine">
     <div class="wrap beef-grid reverse">
-      <figure class="photo photo-wide reveal" style="--img: url('/assets/photos/wine-bottles.webp'); --tone: 345deg">
-        <figcaption>Burgundy and beyond</figcaption>
+      <figure class="photo photo-wide reveal" style="--img: url('/assets/photos/wine-bottles.webp')">
+        <figcaption>Wine</figcaption>
       </figure>
       <div class="beef-body">
         <header class="section-head left">
           <p class="eyebrow">WINE</p>
           <h2>Burgundy &amp; Champagne</h2>
         </header>
-        <p class="reveal">
-          Our sommelier and chef choose each bottle for how it sits with the food, with a focus on Burgundy
-          and Champagne. Tell us what you like and your budget, and we will suggest a glass or a bottle.
-        </p>
+        <p class="reveal">Chosen by our sommelier and chef to sit beside Manyo beef.</p>
         <div class="partner reveal">
-          <img src="/assets/photos/partner.jpg" alt="Wine selection partner Yuka Miyama" loading="lazy" width="760" height="520">
+          <img src="/assets/photos/partner.jpg" alt="Wine selection partner Yuka Miyama" width="760" height="520">
           <div>
             <p class="partner-role">WINE SELECTION PARTNER</p>
             <h3>Yuka Miyama <small>Yuka Selections</small></h3>
-            <p>After four years in Burgundy and a diploma from the University of Burgundy, she has visited more than 300 estates. In 2020 she founded Yuka Selections, importing Burgundy and Champagne from growers admired by Michelin-starred restaurants, shipped at a constant 16 °C.</p>
           </div>
         </div>
       </div>
@@ -290,44 +205,22 @@
     <div class="wrap">
       <header class="section-head">
         <p class="eyebrow">THE ROOM</p>
-        <h2>Where you’ll sit</h2>
-        <p class="sub">12 seats in total <span class="q">TBC</span></p>
+        <h2>The Room</h2>
       </header>
       <div class="room-grid">
-        <article class="room-card reveal">
-          <figure class="photo" style="--img: url('/assets/photos/counter-seats.webp'); --tone: 30deg"><figcaption>Counter</figcaption></figure>
-          <h3>The counter</h3>
-          <p>A single slab of hinoki cypress facing the kitchen. Watch the chef sear, rest and plate — ideal for one or two.</p>
-          <p class="meta">Best for 1–2 guests</p>
-        </article>
-        <article class="room-card reveal">
-          <figure class="photo" style="--img: url('/assets/photos/table-seats.webp'); --tone: 18deg"><figcaption>Tables</figcaption></figure>
-          <h3>Tables</h3>
-          <p>A quieter setting for conversation — for families, friends and celebrations.</p>
-          <p class="meta">Best for 2–6 guests</p>
-        </article>
-        <article class="room-card reveal">
-          <figure class="photo" style="--img: url('/assets/photos/chef-at-counter.webp'); --tone: 40deg"><figcaption>The chef at the counter</figcaption></figure>
-          <h3>Private bookings</h3>
-          <p>For 7 guests or more, or to book the whole restaurant, please call us.</p>
-          <p class="meta">TEL +81-75-275-1080</p>
-        </article>
+        <figure class="room-card reveal">
+          <div class="photo" style="--img: url('/assets/photos/chef-at-counter.webp')"></div>
+          <figcaption><h3>Counter</h3><p>The chef’s hands, right in front of you.</p></figcaption>
+        </figure>
+        <figure class="room-card reveal">
+          <div class="photo" style="--img: url('/assets/photos/table-seats.webp')"></div>
+          <figcaption><h3>Table</h3><p>A quieter setting for conversation.</p></figcaption>
+        </figure>
+        <figure class="room-card reveal">
+          <div class="photo" style="--img: url('/assets/photos/exterior-dusk.webp')"></div>
+          <figcaption><h3>Private</h3><p>For 7 or more, please call us.</p></figcaption>
+        </figure>
       </div>
-    </div>
-  </section>
-
-  <!-- ===== Occasions ===== -->
-  <section class="section scenes">
-    <div class="wrap">
-      <header class="section-head">
-        <p class="eyebrow">OCCASIONS</p>
-        <h2>Made for</h2>
-      </header>
-      <ul class="scene-list">
-        <li class="reveal"><figure class="photo photo-scene" style="--img: url('/assets/photos/white-asparagus.webp'); --tone: 28deg"><figcaption>A plate of the season</figcaption></figure><h3>A special night in Kyoto</h3><p>Close to the Imperial Palace and Nijo Castle — end a day of sightseeing with Kyoto produce and fine wine.</p></li>
-        <li class="reveal"><figure class="photo photo-scene" style="--img: url('/assets/photos/exterior-dusk.webp'); --tone: 28deg"><figcaption>Shinmachi-dori at dusk</figcaption></figure><h3>Celebrations</h3><p>Anniversaries and birthdays at the counter. Message plates on request <span class="q">TBC</span>.</p></li>
-        <li class="reveal"><figure class="photo photo-scene" style="--img: url('/assets/photos/hamburg-lunch-vertical.webp'); --tone: 28deg"><figcaption>Wagyu hamburg lunch</figcaption></figure><h3>A relaxed lunch</h3><p>Try Manyo beef and seasonal French cooking from ¥5,000.</p></li>
-      </ul>
     </div>
   </section>
 
@@ -336,14 +229,10 @@
     <div class="wrap">
       <header class="section-head">
         <p class="eyebrow">INSTAGRAM</p>
-        <h2>Latest from the kitchen</h2>
-        <p class="sub">New Instagram posts appear here automatically.</p>
+        <h2><a class="ig-handle" id="ig-follow" href="https://www.instagram.com/bien_manger_kyoto/" target="_blank" rel="noopener" data-track="instagram_click" data-label="follow_en">@bien_manger_kyoto</a></h2>
       </header>
       <div class="ig-grid" id="ig-grid" aria-live="polite"></div>
       <p class="ig-status" id="ig-status"></p>
-      <div class="center">
-        <a class="btn btn-ghost" id="ig-follow" href="https://www.instagram.com/bien_manger_kyoto/" target="_blank" rel="noopener" data-track="instagram_click" data-label="follow_en">Follow @bien_manger_kyoto</a>
-      </div>
     </div>
   </section>
 
@@ -354,12 +243,10 @@
         <p class="eyebrow">FAQ</p>
         <h2>Good to know</h2>
       </header>
-      <details class="reveal"><summary>Do you speak English? Is there an English menu?</summary><p>An English menu and English-speaking service are available <span class="q">TBC</span>. Please mention it in your booking.</p></details>
-      <details class="reveal"><summary>Is there a dress code?</summary><p>Smart casual. A jacket is not required. Please avoid strong perfume, as it affects the experience for other guests at the counter.</p></details>
-      <details class="reveal"><summary>Can you accommodate allergies, vegetarians or other diets?</summary><p>Please tell us when you book. We adjust the menu where we can; vegetarian options are <span class="q">TBC</span>. Same-day changes may not be possible.</p></details>
-      <details class="reveal"><summary>Can I bring children?</summary><p>Please contact us in advance about age and menu <span class="q">TBC</span>.</p></details>
-      <details class="reveal"><summary>Which payment methods do you accept?</summary><p>Major credit cards <span class="q">TBC</span>. Tipping is not expected in Japan.</p></details>
-      <details class="reveal"><summary>What is the cancellation policy?</summary><p>See the policy shown on the booking page <span class="q">TBC</span>.</p></details>
+      <details class="reveal"><summary>Is there a dress code?</summary><p>Smart casual. Please avoid strong perfume.</p></details>
+      <details class="reveal"><summary>Do you speak English?</summary><p>An English menu is available<span class="q">TBC</span>. Please mention it when booking.</p></details>
+      <details class="reveal"><summary>Can you accommodate allergies or diets?</summary><p>Please tell us when you book and we will adjust where we can.</p></details>
+      <details class="reveal"><summary>How long does a meal take?</summary><p>About 1.5 hours for lunch and 2.5 hours for dinner<span class="q">TBC</span>.</p></details>
     </div>
   </section>
 
@@ -372,36 +259,26 @@
           <h2>Getting here</h2>
         </header>
         <dl class="info">
-          <div><dt>Address</dt><dd>288-1 Benzaiten-cho, Shinmachi-dori Takeyamachi-sagaru, Nakagyo-ku, Kyoto 604-0093<br><span lang="ja">〒604-0093 京都府京都市中京区新町通竹屋町下る弁財天町288-1</span></dd></div>
-          <div><dt>Station</dt><dd>Marutamachi Station (Karasuma Line, K07), about 5 min on foot. From Kyoto Station, take the Karasuma Line north — about 8 min.</dd></div>
-          <div><dt>Hours</dt><dd>Lunch: seating 12:00–13:00<br>Dinner: seating 18:00–19:00</dd></div>
-          <div><dt>Closed</dt><dd>Tuesdays and irregular holidays <span class="q">TBC</span></dd></div>
-          <div><dt>Seats</dt><dd>12</dd></div>
+          <div><dt>Address</dt><dd>288-1 Benzaiten-cho, Shinmachi-dori Takeyamachi-sagaru, Nakagyo-ku, Kyoto<br><span lang="ja">京都市中京区新町通竹屋町下る弁財天町288-1</span></dd></div>
+          <div><dt>Station</dt><dd>Marutamachi (Karasuma Line), 5 min walk</dd></div>
+          <div><dt>Hours</dt><dd>Lunch from 12:00 ／ Dinner from 18:00</dd></div>
+          <div><dt>Closed</dt><dd>Tuesdays and irregular days<span class="q">TBC</span></dd></div>
           <div><dt>Phone</dt><dd><a href="tel:+81752751080" data-track="tel_click" data-label="access_en">+81-75-275-1080</a></dd></div>
         </dl>
-        <figure class="photo photo-entry reveal" style="--img: url('/assets/photos/entrance-noren.webp'); --tone: 24deg">
-          <figcaption>The entrance on Shinmachi-dori</figcaption>
-        </figure>
       </div>
       <div class="map-wrap">
         <iframe title="Map to BIEN MANGER" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
           src="https://maps.google.com/maps?q=%E4%BA%AC%E9%83%BD%E5%BA%9C%E4%BA%AC%E9%83%BD%E5%B8%82%E4%B8%AD%E4%BA%AC%E5%8C%BA%E5%BC%81%E8%B2%A1%E5%A4%A9%E7%94%BA288-1&z=17&hl=en&output=embed"></iframe>
-        <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&query=%E4%BA%AC%E9%83%BD%E5%B8%82%E4%B8%AD%E4%BA%AC%E5%8C%BA%E6%96%B0%E7%94%BA%E9%80%9A%E7%AB%B9%E5%B1%8B%E7%94%BA%E4%B8%8B%E3%82%8B%E5%BC%81%E8%B2%A1%E5%A4%A9%E7%94%BA288-1" target="_blank" rel="noopener" data-track="map_click" data-label="access_en">Open in Google Maps</a>
-        <p class="map-tip">Tip: show this address to your taxi driver — <span lang="ja">新町通竹屋町下る 弁財天町288-1</span></p>
+        <a class="text-link" href="https://www.google.com/maps/search/?api=1&query=%E4%BA%AC%E9%83%BD%E5%B8%82%E4%B8%AD%E4%BA%AC%E5%8C%BA%E6%96%B0%E7%94%BA%E9%80%9A%E7%AB%B9%E5%B1%8B%E7%94%BA%E4%B8%8B%E3%82%8B%E5%BC%81%E8%B2%A1%E5%A4%A9%E7%94%BA288-1" target="_blank" rel="noopener" data-track="map_click" data-label="access_en">Open in Google Maps →</a>
       </div>
     </div>
   </section>
 
-  <!-- ===== Final CTA ===== -->
-  <section class="final-cta">
-    <div class="wrap">
-      <p class="eyebrow">RESERVATION</p>
-      <h2>Eat well in Kyoto.</h2>
-      <p>Book online in English, any time. For anything else, please call.</p>
-      <div class="hero-cta">
-        <a class="btn btn-primary" href="https://www.tablecheck.com/en/bien-manger/reserve/" target="_blank" rel="noopener" data-track="reserve_click" data-label="final_en">Check Availability</a>
-        <a class="btn btn-ghost" href="tel:+81752751080" data-track="tel_click" data-label="final_en">+81-75-275-1080</a>
-      </div>
+  <!-- ===== Final ===== -->
+  <section class="band band-final" style="--img: url('/assets/photos/starters-platter.webp')">
+    <div class="band-inner">
+      <p class="band-text">Eat well in Kyoto.</p>
+      <a class="btn btn-primary" href="https://www.tablecheck.com/en/bien-manger/reserve/" target="_blank" rel="noopener" data-track="reserve_click" data-label="final_en">Reserve</a>
     </div>
   </section>
 
@@ -409,13 +286,13 @@
 
 <footer class="site-footer">
   <p class="brand-en">BIEN MANGER</p>
-  <p>288-1 Benzaiten-cho, Nakagyo-ku, Kyoto ／ TEL +81-75-275-1080</p>
+  <p>288-1 Benzaiten-cho, Nakagyo-ku, Kyoto　<span class="nw">TEL +81-75-275-1080</span></p>
   <p class="copy">© BIEN MANGER</p>
 </footer>
 
 <div class="mobile-bar">
   <a href="tel:+81752751080" data-track="tel_click" data-label="mobile_bar_en">Call</a>
-  <a class="primary" href="https://www.tablecheck.com/en/bien-manger/reserve/" target="_blank" rel="noopener" data-track="reserve_click" data-label="mobile_bar_en">Book a Table</a>
+  <a class="primary" href="https://www.tablecheck.com/en/bien-manger/reserve/" target="_blank" rel="noopener" data-track="reserve_click" data-label="mobile_bar_en">Reserve</a>
 </div>
 
 <script src="/assets/main.js" defer></script>

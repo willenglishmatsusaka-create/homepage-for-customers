@@ -55,14 +55,16 @@ GitHub 連携で自動デプロイする場合は、Cloudflare ダッシュボ�
 
 | ファイル名 | 使われる場所 |
 |---|---|
-| wagyu-steak-closeup / chef-open-kitchen / white-asparagus / starters-platter / entrance-noren（.webp） | トップのカルーセル（この順・文字は写真の下） |
-| chef.jpg / beef.jpg | シェフ紹介／万葉牛（公式サイトより） |
-| starters-wine / fish-dish / kamado-rice（.webp） | コースの流れ |
-| wagyu-steak-lunch / hamburg-lunch-wine（.webp） | ランチの料金表 |
-| wine-bottles.webp / partner.jpg | ワイン／パートナー |
-| counter-seats / table-seats / chef-at-counter（.webp） | 店内とお過ごし方 |
-| white-asparagus / exterior-dusk / hamburg-lunch-vertical（.webp） | こんな日に |
-| entrance-noren.webp | アクセス |
+| wagyu-steak-closeup / chef-open-kitchen / white-asparagus / starters-platter / entrance-noren | トップのカルーセル（文字は写真の下） |
+| chef.jpg / beef.jpg | シェフ／万葉牛（公式サイトより） |
+| counter-seats | 全幅の写真の帯（カウンター） |
+| starters-platter / starters-wine / white-asparagus / fish-dish / wagyu-steak-closeup / kamado-rice | お料理のカルーセル（3枚ずつ表示） |
+| wagyu-steak-lunch / hamburg-lunch-wine | ランチの写真 |
+| wine-bottles / partner.jpg | ワイン／パートナー |
+| chef-at-counter / table-seats / exterior-dusk | 店内 |
+| starters-platter | 最後の写真の帯 |
+
+画像は特記がなければ `.webp`。Instagram 連携前は、店の写真6枚をデモ投稿として表示します。
 
 元の写真は Google ドライブの共有フォルダに「番号_内容_ファイル名」で整理しています。
 
@@ -85,4 +87,4 @@ Instagram 連携後は、最新投稿の写真3枚もカルーセルに自動で
 | Instagram | @bien_manger_kyoto のプロアカウント化とトークン発行 |
 | 写真 | シェフ、万葉牛、カウンター、テーブル、入口・外観、ワイン |
 
-ページ冒頭の「提案用デモ」バーと `.q`（要確認タグ）は、確定後に削除します。
+「要確認」タグは通常は非表示です。ページ上部の「確認が必要な項目を表示」ボタンで表示できます。確定後はデモ帯ごと削除します。

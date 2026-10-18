@@ -1,12 +1,12 @@
 (() => {
   const EN = document.documentElement.lang === "en";
   const t = EN
-    ? { photo: "Photo", post: "Instagram post", follow: (u) => `Follow @${u}`, fromIg: "From Instagram",
-        demo: "Demo posts. Once Instagram is connected, the latest posts appear here automatically.",
-        updated: "Updated", failed: "Instagram posts could not be loaded." }
-    : { photo: "写真", post: "Instagram の投稿", follow: (u) => `@${u} をフォローする`, fromIg: "Instagram より",
-        demo: "※デモ表示です。Instagram 連携後は実際の最新投稿に自動で切り替わります。",
-        updated: "最終更新", failed: "Instagram の投稿を読み込めませんでした。" };
+    ? { photo: "Photo", post: "Instagram post", fromIg: "From Instagram",
+        demo: "Demo: the latest Instagram posts will appear here automatically.",
+        failed: "Instagram posts could not be loaded." }
+    : { photo: "写真", post: "Instagram の投稿", fromIg: "Instagram より",
+        demo: "デモ表示：連携後は最新の投稿が自動で表示されます。",
+        failed: "Instagram の投稿を読み込めませんでした。" };
 
   // ---- スクロール表示 ----
   const io = "IntersectionObserver" in window
@@ -96,6 +96,35 @@
     buildDots();
   };
 
+  // ---- 要確認タグの表示切り替え（デモ用） ----
+  const qToggle = document.querySelector(".q-toggle");
+  if (qToggle) {
+    qToggle.addEventListener("click", () => {
+      const on = document.body.classList.toggle("show-q");
+      qToggle.setAttribute("aria-pressed", String(on));
+    });
+  }
+
+  // ---- コースの流れ：3枚ずつ見えるカルーセル ----
+  document.querySelectorAll("[data-reel]").forEach((reel) => {
+    const track = reel.querySelector(".reel-track");
+    const step = () => track.firstElementChild.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 0);
+    const move = (dir) => {
+      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+      if (dir > 0 && atEnd) track.scrollTo({ left: 0 });
+      else track.scrollBy({ left: dir * step() });
+    };
+    reel.querySelectorAll(".reel-arrow").forEach((b) => b.addEventListener("click", () => move(Number(b.dataset.dir))));
+    if (reduceMotion) return;
+    let timer = setInterval(() => move(1), 3500);
+    const pause = () => clearInterval(timer);
+    const resume = () => { clearInterval(timer); timer = setInterval(() => move(1), 3500); };
+    reel.addEventListener("mouseenter", pause);
+    reel.addEventListener("mouseleave", resume);
+    track.addEventListener("touchstart", pause, { passive: true });
+    track.addEventListener("touchend", resume);
+  });
+
   // ---- クリック計測（予約・電話・地図・Instagram） ----
   document.addEventListener("click", (ev) => {
     const a = ev.target.closest("[data-track]");
@@ -125,7 +154,7 @@
 
   const render = (feed) => {
     grid.textContent = "";
-    feed.posts.slice(0, 9).forEach((post, i) => {
+    feed.posts.slice(0, 6).forEach((post, i) => {
       const a = document.createElement("a");
       a.className = "ig-item reveal";
       a.href = post.permalink;
@@ -135,7 +164,6 @@
       a.dataset.label = "post";
       if (post.type === "VIDEO") a.classList.add("video");
       // デモでは先頭3件を「固定投稿」として表示（初めての方へ／コースと料金／店内・過ごし方）
-      if (feed.demo && i < 3) a.classList.add("pinned");
 
       if (post.image) {
         const img = document.createElement("img");
@@ -160,10 +188,8 @@
     });
 
     if (feed.profileUrl) follow.href = feed.profileUrl;
-    if (feed.username) follow.textContent = t.follow(feed.username);
-    status.textContent = feed.demo
-      ? t.demo
-      : `${t.updated} ${fmt(feed.updatedAt)}`;
+    if (feed.username) follow.textContent = `@${feed.username}`;
+    status.textContent = feed.demo ? t.demo : "";
   };
 
   fetch(`/api/instagram${EN ? "?lang=en" : ""}`)
