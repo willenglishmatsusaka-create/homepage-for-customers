@@ -41,14 +41,18 @@ GitHub 連携で自動デプロイする場合は、Cloudflare ダッシュボ�
 `public/assets/photos/` に次のファイル名で JPEG を置くと、ページに自動で表示されます（無い場合は仮の枠が出ます）。
 横長 2000px 前後・300KB 程度が目安です。
 
-| ファイル名 | 使われる場所 |
-|---|---|
-| hero-1.jpg 〜 hero-5.jpg | トップのカルーセル（万葉牛／カウンター／前菜／ワイン／外観） |
-| chef.jpg | シェフ紹介（縦長 3:4） |
-| beef.jpg | 万葉牛 |
-| wine.jpg | ワイン |
-| counter.jpg / table.jpg / exterior.jpg | 店内とお過ごし方 |
-| entrance.jpg | アクセス（入口） |
+| ファイル名 | 使われる場所 | 現在の写真（公式サイトより） |
+|---|---|---|
+| hero-1.jpg / hero-1-sp.jpg | カルーセル1枚目（PC／スマホ） | 土と若葉（旧メインビジュアル） |
+| hero-2.jpg | カルーセル2枚目 | カウンター |
+| hero-3.jpg | カルーセル3枚目 | 鳥取いなばの田園 |
+| chef.jpg | シェフ紹介 | 中西シェフ |
+| beef.jpg | 万葉牛 | 万葉牛の霜降り |
+| dish.jpg | コースの流れ | 季節の野菜とトリュフの一皿 |
+| wine.jpg / partner.jpg | ワイン／パートナー | ワインと前菜／深山由佳氏 |
+| counter.jpg / table.jpg / exterior.jpg | 店内・アクセス | カウンター・テーブル側の切り出し／外観 |
+
+カルーセルに足したい場合は `index.html` の `hero-slide` を1行追加します。
 
 Instagram 連携後は、最新投稿の写真3枚もカルーセルに自動で追加されます。
 
