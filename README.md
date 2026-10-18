@@ -50,19 +50,21 @@ GitHub 連携で自動デプロイする場合は、Cloudflare ダッシュボ�
 
 ## 写真の差し替え
 
-`public/assets/photos/` に次のファイル名で JPEG を置くと、ページに自動で表示されます（無い場合は仮の枠が出ます）。
+`public/assets/photos/` に次のファイル名で画像を置くと、ページに自動で表示されます（無い場合は仮の枠が出ます）。
 横長 2000px 前後・300KB 程度が目安です。
 
-| ファイル名 | 使われる場所 | 現在の写真（公式サイトより） |
-|---|---|---|
-| counter-guest.jpg | カルーセル1枚目 | カウンター（Google 口コミ掲載写真） |
-| hero-1.jpg / hero-1-sp.jpg | カルーセル2枚目（PC／スマホ） | 土と若葉（旧メインビジュアル） |
-| hero-3.jpg | カルーセル3枚目 | 鳥取いなばの田園 |
-| chef.jpg | シェフ紹介 | 中西シェフ |
-| beef.jpg | 万葉牛 | 万葉牛の霜降り |
-| dish.jpg | コースの流れ | 季節の野菜とトリュフの一皿 |
-| wine.jpg / partner.jpg | ワイン／パートナー | ワインと前菜／深山由佳氏 |
-| counter.jpg / table.jpg / exterior.jpg | 店内・アクセス | カウンター・テーブル側の切り出し／外観 |
+| ファイル名 | 使われる場所 |
+|---|---|
+| counter-seats / wagyu-steak-closeup / chef-open-kitchen / white-asparagus / starters-platter / entrance-noren（.webp） | トップのカルーセル（この順） |
+| chef.jpg | シェフ紹介（公式サイトより） |
+| beef.jpg | 万葉牛（公式サイトより） |
+| starters-platter.webp | コースの流れ |
+| wagyu-steak-lunch.webp / hamburg-lunch-wine.webp | ランチの料金表 |
+| wine-bottles.webp / partner.jpg | ワイン／パートナー |
+| chef-at-counter.webp / table.jpg / exterior-dusk.webp | 店内とお過ごし方 |
+| entrance-noren.webp | アクセス |
+
+元の写真は Google ドライブの共有フォルダに「番号_内容_ファイル名」で整理しています（未使用：hamburg-lunch-vertical）。
 
 カルーセルに足したい場合は `index.html` の `hero-slide` を1行追加します。
 
