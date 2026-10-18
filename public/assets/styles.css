@@ -120,8 +120,8 @@ small { font-size: 0.78em; color: var(--ivory-dim); }
 .hero-shade {
   position: absolute; inset: 0; pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(10, 8, 7, .82) 0%, rgba(10, 8, 7, .45) 55%, rgba(10, 8, 7, .1) 100%),
-    linear-gradient(0deg, rgba(10, 8, 7, .85) 0%, transparent 45%);
+    linear-gradient(90deg, rgba(10, 8, 7, .88) 0%, rgba(10, 8, 7, .62) 50%, rgba(10, 8, 7, .2) 100%),
+    linear-gradient(0deg, rgba(10, 8, 7, .9) 0%, transparent 45%);
 }
 .hero-controls {
   position: absolute; left: 50%; bottom: 84px; transform: translateX(-50%);
@@ -141,7 +141,8 @@ small { font-size: 0.78em; color: var(--ivory-dim); }
 .hero-dots button[aria-selected="true"] { background: var(--gold); width: 44px; }
 @media (max-width: 640px) {
   .hero { padding-bottom: 150px; }
-  .hero-shade { background: linear-gradient(0deg, rgba(10, 8, 7, .92) 0%, rgba(10, 8, 7, .55) 60%, rgba(10, 8, 7, .3) 100%); }
+  .hero-shade { background: linear-gradient(0deg, rgba(10, 8, 7, .94) 0%, rgba(10, 8, 7, .7) 55%, rgba(10, 8, 7, .45) 100%); }
+  .hero-slide { background: var(--img-sp, var(--img)) center / cover no-repeat, #0d0b0a; }
   .hero-slide figcaption { right: 16px; bottom: 132px; }
   .hero-controls { bottom: 72px; }
 }
@@ -206,6 +207,7 @@ small { font-size: 0.78em; color: var(--ivory-dim); }
 .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .photo-tall { aspect-ratio: 3 / 4; }
 .photo-wide { aspect-ratio: 16 / 11; }
+.photo-dish { aspect-ratio: 1200 / 630; margin: 0 0 48px; }
 .photo-entry { aspect-ratio: 16 / 9; margin-top: 32px; }
 
 /* First visit */
@@ -383,3 +385,11 @@ small { font-size: 0.78em; color: var(--ivory-dim); }
   .hero-slide { transition: opacity .6s ease; transform: none; }
 }
 .price-table thead th.r { font-family: var(--sans); font-size: 11px; color: var(--ivory-dim); }
+
+/* Wine partner */
+.partner { display: grid; grid-template-columns: 96px 1fr; gap: 20px; margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line); align-items: start; }
+.partner img { width: 96px; height: 96px; object-fit: cover; object-position: 50% 20%; border-radius: 50%; filter: grayscale(.2); }
+.partner-role { font-family: var(--serif-en); font-size: 11px; letter-spacing: .28em; color: var(--gold); margin: 0 0 4px; }
+.partner h3 { font-size: 17px; margin-bottom: 10px; }
+.partner h3 small { font-family: var(--serif-en); margin-left: .6em; letter-spacing: .1em; }
+.partner p { font-size: 13px; color: var(--ivory-dim); margin: 0; }
