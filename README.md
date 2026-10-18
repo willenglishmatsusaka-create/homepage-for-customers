@@ -29,12 +29,8 @@ GitHub 連携で自動デプロイする場合は、Cloudflare ダッシュボ�
 
 1. Instagram アカウントをプロアカウント（ビジネス／クリエイター）に切り替え
 2. Meta for Developers でアプリを作成し「Instagram API with Instagram login」を追加、長期アクセストークンを発行
-3. KV を作成し、`wrangler.jsonc` の `kv_namespaces` のコメントを外して id を設定
-   ```sh
-   npx wrangler kv namespace create IG_KV
-   ```
-4. `wrangler.jsonc` の `IG_USERNAME` にユーザー名を設定
-5. トークンをシークレットとして登録してデプロイ
+3. KV（`bien-manger-demo-IG_KV`）とユーザー名 `bien_manger_kyoto` は設定済み
+4. トークンをシークレットとして登録してデプロイ
    ```sh
    npx wrangler secret put IG_ACCESS_TOKEN
    npx wrangler deploy
@@ -52,7 +48,7 @@ GitHub 連携で自動デプロイする場合は、Cloudflare ダッシュボ�
 | 所要時間・服装・子ども・キャンセル | FAQ の記載内容 |
 | 席構成 | 全12席の内訳（カウンター／テーブル） |
 | シェフの言葉・経歴 | 引用文はたたき台。経歴の年や役職の正確な表記 |
-| Instagram | アカウントID（「ビアンマンジェ京都」）、プロアカウント化 |
+| Instagram | @bien_manger_kyoto のプロアカウント化とトークン発行 |
 | 写真 | シェフ、万葉牛、カウンター、テーブル、入口・外観、ワイン |
 
 ページ冒頭の「提案用デモ」バーと `.q`（要確認タグ）は、確定後に削除します。
