@@ -65,18 +65,25 @@
       <figure class="hero-slide" style="--img: url('/assets/photos/white-asparagus.webp'); --tone: 28deg"><figcaption>季節の一皿</figcaption></figure>
       <figure class="hero-slide" style="--img: url('/assets/photos/starters-platter.webp'); --tone: 28deg"><figcaption>前菜のひと皿ずつ</figcaption></figure>
       <figure class="hero-slide" style="--img: url('/assets/photos/entrance-noren.webp'); --tone: 28deg"><figcaption>新町通の暖簾をくぐって</figcaption></figure>
+      <div class="hero-controls">
+        <button type="button" class="hero-arrow" data-dir="-1" aria-label="前の写真">‹</button>
+        <div class="hero-dots" id="hero-dots" role="tablist"></div>
+        <button type="button" class="hero-arrow" data-dir="1" aria-label="次の写真">›</button>
+      </div>
     </div>
-    <div class="hero-shade" aria-hidden="true"></div>
     <div class="hero-inner">
+      <div class="hero-intro">
       <p class="eyebrow">KYOTO ・ MARUTAMACHI ・ FRENCH × WAGYU</p>
       <h1 class="hero-title">
         <span>万葉牛と、季節の野菜。</span>
         <span>京都で過ごす、ひと皿ずつの時間。</span>
       </h1>
       <p class="hero-lead">
-        純血但馬血統「万葉牛」を、アラン・デュカスの厨房で学んだシェフがフランス料理に。<br class="pc">
+        純血但馬血統「万葉牛」を、アラン・デュカスの厨房で学んだシェフがフランス料理に。
         カウンター越しに焼き上がる音と香りまで、ゆっくりお楽しみください。
       </p>
+      </div>
+      <div class="hero-book">
       <dl class="hero-facts">
         <div><dt>ランチ</dt><dd>¥5,000〜 <small>12:00–13:00 入店</small></dd></div>
         <div><dt>ディナー</dt><dd>¥20,000〜 <small>18:00–19:00 入店</small></dd></div>
@@ -87,13 +94,8 @@
         <a class="btn btn-ghost" href="#courses">コースと料金を見る</a>
       </div>
       <p class="hero-note">オンライン予約は24時間受付。初めての方も、お一人様も歓迎いたします。</p>
+      </div>
     </div>
-    <div class="hero-controls">
-      <button type="button" class="hero-arrow" data-dir="-1" aria-label="前の写真">‹</button>
-      <div class="hero-dots" id="hero-dots" role="tablist"></div>
-      <button type="button" class="hero-arrow" data-dir="1" aria-label="次の写真">›</button>
-    </div>
-    <a class="scroll-cue" href="#first" aria-label="下へスクロール"><span></span></a>
   </section>
 
   <!-- ===== 初めての方へ ===== -->
@@ -197,16 +199,18 @@
         <h2>ディナーコースの流れ <small>（一例）</small></h2>
         <p class="sub">季節と仕入れにより内容は変わります。<span class="q">構成は要確認</span></p>
       </header>
-      <figure class="photo photo-dish reveal" style="--img: url('/assets/photos/starters-platter.webp'); --tone: 210deg">
-        <figcaption>前菜のひと皿ずつ</figcaption>
-      </figure>
+      <div class="flow-photos reveal">
+        <figure class="photo" style="--img: url('/assets/photos/starters-wine.webp'); --tone: 30deg"><figcaption>前菜とサンセール</figcaption></figure>
+        <figure class="photo" style="--img: url('/assets/photos/fish-dish.webp'); --tone: 30deg"><figcaption>魚料理</figcaption></figure>
+        <figure class="photo" style="--img: url('/assets/photos/kamado-rice.webp'); --tone: 30deg"><figcaption>かまど炊きのご飯</figcaption></figure>
+      </div>
       <ol class="flow-list">
         <li class="reveal"><span class="flow-no">I</span><h3>アミューズ</h3><p>一口目で季節を。</p></li>
         <li class="reveal"><span class="flow-no">II</span><h3>前菜</h3><p>京都の季節野菜を主役に。</p></li>
         <li class="reveal"><span class="flow-no">III</span><h3>スープ</h3><p>野菜の甘みを引き出したポタージュなど。</p></li>
         <li class="reveal"><span class="flow-no">IV</span><h3>魚料理</h3><p>その日届いた魚を、ソースとともに。</p></li>
         <li class="reveal"><span class="flow-no">V</span><h3>万葉牛</h3><p>目の前で焼き、休ませ、切り分ける主菜。</p></li>
-        <li class="reveal"><span class="flow-no">VI</span><h3>お食事</h3><p>トリュフご飯など、和牛を受け止める〆。</p></li>
+        <li class="reveal"><span class="flow-no">VI</span><h3>かまど炊きのご飯</h3><p>かまどで炊き上げる、炊きたてのご飯で〆に。</p></li>
         <li class="reveal"><span class="flow-no">VII</span><h3>デセール・カフェ</h3><p>余韻とともに、ゆっくりと。</p></li>
       </ol>
     </div>
@@ -305,7 +309,7 @@
           <p class="meta">1〜2名様におすすめ</p>
         </article>
         <article class="room-card reveal">
-          <figure class="photo" style="--img: url('/assets/photos/table.jpg'); --tone: 18deg"><figcaption>テーブル席</figcaption></figure>
+          <figure class="photo" style="--img: url('/assets/photos/table-seats.webp'); --tone: 18deg"><figcaption>テーブル席</figcaption></figure>
           <h3>テーブル席</h3>
           <p>会話を楽しみながら、落ち着いて過ごせるお席。ご家族やご友人、記念日の会食に。</p>
           <p class="meta">2〜6名様におすすめ</p>

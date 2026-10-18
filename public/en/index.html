@@ -65,9 +65,14 @@
       <figure class="hero-slide" style="--img: url('/assets/photos/white-asparagus.webp'); --tone: 28deg"><figcaption>A plate of the season</figcaption></figure>
       <figure class="hero-slide" style="--img: url('/assets/photos/starters-platter.webp'); --tone: 28deg"><figcaption>Starters, plate by plate</figcaption></figure>
       <figure class="hero-slide" style="--img: url('/assets/photos/entrance-noren.webp'); --tone: 28deg"><figcaption>Through the noren on Shinmachi-dori</figcaption></figure>
+      <div class="hero-controls">
+        <button type="button" class="hero-arrow" data-dir="-1" aria-label="Previous photo">‹</button>
+        <div class="hero-dots" id="hero-dots" role="tablist"></div>
+        <button type="button" class="hero-arrow" data-dir="1" aria-label="Next photo">›</button>
+      </div>
     </div>
-    <div class="hero-shade" aria-hidden="true"></div>
     <div class="hero-inner">
+      <div class="hero-intro">
       <p class="eyebrow">KYOTO ・ MARUTAMACHI ・ FRENCH × WAGYU</p>
       <h1 class="hero-title">
         <span>Manyo wagyu &amp; the seasons of Kyoto.</span>
@@ -77,6 +82,8 @@
         A chef trained in Alain Ducasse’s kitchens cooks purebred Tajima “Manyo” beef and seasonal
         vegetables at a 12-seat counter — so you can watch, hear and smell each plate come together.
       </p>
+      </div>
+      <div class="hero-book">
       <dl class="hero-facts">
         <div><dt>Lunch</dt><dd>from ¥5,000 <small>seating 12:00–13:00</small></dd></div>
         <div><dt>Dinner</dt><dd>from ¥20,000 <small>seating 18:00–19:00</small></dd></div>
@@ -87,13 +94,8 @@
         <a class="btn btn-ghost" href="#courses">Menu &amp; Prices</a>
       </div>
       <p class="hero-note">Online booking in English, 24 hours a day. First-time and solo guests are always welcome.</p>
+      </div>
     </div>
-    <div class="hero-controls">
-      <button type="button" class="hero-arrow" data-dir="-1" aria-label="Previous photo">‹</button>
-      <div class="hero-dots" id="hero-dots" role="tablist"></div>
-      <button type="button" class="hero-arrow" data-dir="1" aria-label="Next photo">›</button>
-    </div>
-    <a class="scroll-cue" href="#first" aria-label="Scroll down"><span></span></a>
   </section>
 
   <!-- ===== First visit ===== -->
@@ -190,16 +192,18 @@
         <h2>A dinner, course by course <small>(example)</small></h2>
         <p class="sub">The menu changes with the season and the market. <span class="q">TBC</span></p>
       </header>
-      <figure class="photo photo-dish reveal" style="--img: url('/assets/photos/starters-platter.webp'); --tone: 210deg">
-        <figcaption>Starters, plate by plate</figcaption>
-      </figure>
+      <div class="flow-photos reveal">
+        <figure class="photo" style="--img: url('/assets/photos/starters-wine.webp'); --tone: 30deg"><figcaption>Starters with Sancerre</figcaption></figure>
+        <figure class="photo" style="--img: url('/assets/photos/fish-dish.webp'); --tone: 30deg"><figcaption>Fish course</figcaption></figure>
+        <figure class="photo" style="--img: url('/assets/photos/kamado-rice.webp'); --tone: 30deg"><figcaption>Kamado-cooked rice</figcaption></figure>
+      </div>
       <ol class="flow-list">
         <li class="reveal"><span class="flow-no">I</span><h3>Amuse-bouche</h3><p>A first taste of the season.</p></li>
         <li class="reveal"><span class="flow-no">II</span><h3>Starter</h3><p>Kyoto vegetables take the lead.</p></li>
         <li class="reveal"><span class="flow-no">III</span><h3>Soup</h3><p>Often a potage that draws out the vegetables’ sweetness.</p></li>
         <li class="reveal"><span class="flow-no">IV</span><h3>Fish</h3><p>The day’s catch, with a classic sauce.</p></li>
         <li class="reveal"><span class="flow-no">V</span><h3>Manyo beef</h3><p>Seared, rested and carved in front of you.</p></li>
-        <li class="reveal"><span class="flow-no">VI</span><h3>Rice</h3><p>Such as truffle rice to round off the beef.</p></li>
+        <li class="reveal"><span class="flow-no">VI</span><h3>Kamado rice</h3><p>Rice cooked in a traditional kamado pot, served fresh.</p></li>
         <li class="reveal"><span class="flow-no">VII</span><h3>Dessert &amp; coffee</h3><p>Take your time.</p></li>
       </ol>
     </div>
@@ -297,7 +301,7 @@
           <p class="meta">Best for 1–2 guests</p>
         </article>
         <article class="room-card reveal">
-          <figure class="photo" style="--img: url('/assets/photos/table.jpg'); --tone: 18deg"><figcaption>Tables</figcaption></figure>
+          <figure class="photo" style="--img: url('/assets/photos/table-seats.webp'); --tone: 18deg"><figcaption>Tables</figcaption></figure>
           <h3>Tables</h3>
           <p>A quieter setting for conversation — for families, friends and celebrations.</p>
           <p class="meta">Best for 2–6 guests</p>

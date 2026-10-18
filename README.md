@@ -55,14 +55,13 @@ GitHub 連携で自動デプロイする場合は、Cloudflare ダッシュボ�
 
 | ファイル名 | 使われる場所 |
 |---|---|
-| wagyu-steak-closeup / chef-open-kitchen / white-asparagus / starters-platter / entrance-noren（.webp） | トップのカルーセル（この順） |
-| chef.jpg | シェフ紹介（公式サイトより） |
-| beef.jpg | 万葉牛（公式サイトより） |
-| starters-platter.webp | コースの流れ |
-| wagyu-steak-lunch.webp / hamburg-lunch-wine.webp | ランチの料金表 |
+| wagyu-steak-closeup / chef-open-kitchen / white-asparagus / starters-platter / entrance-noren（.webp） | トップのカルーセル（この順・文字は写真の下） |
+| chef.jpg / beef.jpg | シェフ紹介／万葉牛（公式サイトより） |
+| starters-wine / fish-dish / kamado-rice（.webp） | コースの流れ |
+| wagyu-steak-lunch / hamburg-lunch-wine（.webp） | ランチの料金表 |
 | wine-bottles.webp / partner.jpg | ワイン／パートナー |
-| counter-seats.webp / table.jpg / chef-at-counter.webp | 店内とお過ごし方 |
-| white-asparagus.webp / exterior-dusk.webp / hamburg-lunch-vertical.webp | こんな日に |
+| counter-seats / table-seats / chef-at-counter（.webp） | 店内とお過ごし方 |
+| white-asparagus / exterior-dusk / hamburg-lunch-vertical（.webp） | こんな日に |
 | entrance-noren.webp | アクセス |
 
 元の写真は Google ドライブの共有フォルダに「番号_内容_ファイル名」で整理しています。
