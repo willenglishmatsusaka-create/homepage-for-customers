@@ -160,7 +160,7 @@ small { font-size: 0.78em; color: var(--ivory-dim); }
 .hero-title span { display: block; opacity: 0; transform: translateY(14px); animation: rise 1.4s cubic-bezier(.2,.7,.2,1) forwards; }
 .hero-title span:nth-child(2) { font-size: 0.6em; color: var(--ivory-dim); margin-top: .5em; animation-delay: .35s; }
 @keyframes rise { to { opacity: 1; transform: none; } }
-.hero-lead { margin-top: 32px; max-width: 660px; color: var(--ivory); font-size: 17px; }
+.hero-lead { margin-top: 32px; max-width: 760px; color: var(--ivory); font-size: 17px; }
 .hero-facts {
   display: grid; grid-template-columns: 1fr; gap: 0; margin: 36px 0 40px; max-width: 760px;
   border-top: 1px solid var(--line);
@@ -170,7 +170,8 @@ small { font-size: 0.78em; color: var(--ivory-dim); }
 .hero-facts dd { margin: 0; font-family: var(--serif-ja); font-size: 17px; }
 .hero-facts small { margin-left: .6em; }
 @media (min-width: 820px) {
-  .hero-facts { grid-template-columns: repeat(3, 1fr); border-top: 0; }
+  .hero-facts { grid-template-columns: repeat(3, auto); justify-content: start; max-width: none; border-top: 0; }
+  .hero-facts dd { white-space: nowrap; }
   .hero-facts div { flex-direction: column; gap: 4px; border-bottom: 0; border-left: 1px solid var(--line); padding: 4px 24px; }
   .hero-facts div:first-child { border-left: 0; padding-left: 0; }
   .hero-facts small { display: block; margin-left: 0; }
@@ -443,3 +444,46 @@ html[lang="en"] .hero-title { letter-spacing: .02em; }
 .photo-scene { aspect-ratio: 4 / 5; margin-bottom: 22px; }
 .scene-list li { border-top: 0; padding-top: 0; }
 .scene-list h3 { border-top: 1px solid var(--wood); padding-top: 18px; }
+
+/* ---------- スマホ最適化 ---------- */
+@media (max-width: 640px) {
+  /* トップ：写真を上に全体表示し、文字はその下に置く */
+  .hero { display: block; min-height: 0; padding: 0 0 48px; background: var(--ink); }
+  .hero-slides { position: relative; inset: auto; aspect-ratio: 3 / 2; overflow: hidden; }
+  .hero-slides::after {
+    content: ""; position: absolute; inset: auto 0 0 0; height: 30%; pointer-events: none;
+    background: linear-gradient(0deg, var(--ink), transparent);
+  }
+  .hero-slide { background: var(--img-sp, var(--img)) center / cover no-repeat, #0d0b0a; }
+  .hero-slide figcaption { top: 12px; right: 14px; bottom: auto; z-index: 1; font-size: 12px; color: #fff; text-shadow: 0 1px 8px rgba(0, 0, 0, .9); }
+  .hero-shade, .scroll-cue { display: none; }
+  .hero-controls { top: calc(66.667vw - 58px); bottom: auto; left: 16px; transform: none; gap: 10px; }
+  .hero-arrow { width: 34px; height: 34px; font-size: 18px; background: rgba(22, 20, 18, .55); }
+  .hero-dots button { width: 16px; }
+  .hero-dots button[aria-selected="true"] { width: 28px; }
+  .hero-inner { padding: 20px 20px 0; }
+  .hero .eyebrow { font-size: 12px; letter-spacing: .14em; }
+  .hero-title { font-size: 27px; }
+  .hero-lead { font-size: 16px; margin-top: 18px; }
+  .hero-facts { margin: 24px 0 28px; }
+
+  /* 余白とボタン */
+  .section { padding: 72px 0; }
+  .section-head { margin-bottom: 40px; }
+  .wrap { padding: 0 20px; }
+  .btn { padding: 0 22px; letter-spacing: .06em; }
+  .center .btn, .hero-cta .btn { width: 100%; }
+  .final-cta { padding: 80px 0; }
+
+  /* Instagram：2列で余りが出ないよう8件まで */
+  .ig-item:nth-child(n+9) { display: none; }
+
+  /* ワインパートナーは縦に並べる */
+  .partner { grid-template-columns: 72px 1fr; gap: 16px; }
+  .partner img { width: 72px; height: 72px; }
+  .partner-role { letter-spacing: .16em; }
+
+  /* 地図は横長に */
+  .map-wrap iframe { aspect-ratio: 4 / 3; }
+  .faq summary { font-size: 16px; }
+}
