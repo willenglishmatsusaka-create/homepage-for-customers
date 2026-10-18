@@ -586,3 +586,27 @@ body.show-q .q { display: inline-block; }
 html[lang="en"] .hero-title, html[lang="en"] .section-head h2, html[lang="en"] .band-text,
 html[lang="en"] .chef-quote, html[lang="en"] .room-card h3, html[lang="en"] .reel-item figcaption { letter-spacing: .03em; }
 html[lang="en"] .hero-lead { letter-spacing: .02em; }
+
+/* 初めての方へ（別ページ） */
+.band-guide { min-height: 46vh; align-items: flex-end; }
+.band-guide .band-inner { padding: 0 8vw 7vh; }
+.band-guide .eyebrow { color: var(--wood-hi); margin-bottom: 10px; }
+.band-guide .band-text { padding: 0; font-size: clamp(26px, 3vw, 38px); }
+.guide-intro { text-align: center; color: var(--ivory-dim); margin-bottom: 56px; }
+.guide-list { border-top: 1px solid var(--line); margin-bottom: 64px; }
+.guide-item { display: grid; gap: 8px 40px; padding: 30px 0; border-bottom: 1px solid var(--line); }
+@media (min-width: 720px) { .guide-item { grid-template-columns: 13em 1fr; } }
+.guide-item h2 { font-size: 17px; letter-spacing: .1em; line-height: 1.8; }
+.guide-item p { margin: 0; font-size: 15px; line-height: 2; }
+.guide-item a { color: inherit; }
+.guide-back { margin-top: 28px; }
+.guide-link {
+  display: flex; flex-direction: column; gap: 2px; margin-top: 32px; padding: 18px 22px;
+  border: 1px solid var(--line); text-decoration: none; font-family: var(--serif-ja); letter-spacing: .1em;
+  transition: border-color .3s;
+}
+.guide-link span { font-family: var(--sans); font-size: 13px; color: var(--ivory-dim); letter-spacing: .04em; }
+.guide-link::after { content: "→"; align-self: flex-end; margin-top: -1.6em; color: var(--wood-hi); }
+.guide-link:hover { border-color: var(--wood); }
+html[lang="en"] .guide-item h2, html[lang="en"] .guide-link { letter-spacing: .03em; }
+@media (max-width: 640px) { .band-guide { min-height: 34vh; } .band-guide .band-inner { padding: 0 20px 28px; } }

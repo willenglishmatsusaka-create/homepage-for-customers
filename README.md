@@ -6,7 +6,7 @@ Cloudflare Workers（静的アセット＋API）だけで動きます。
 ## 構成
 
 ```
-public/            静的サイト（index.html＝日本語 / en/index.html＝英語 / assets/）
+public/            静的サイト（index.html＝日本語トップ / guide/＝初めての方へ / en/＝英語版 / assets/）
 src/index.js       Worker：/api/instagram（最新投稿）、/api/event（クリック計測）、Cron
 wrangler.jsonc     Cloudflare 設定
 ```
