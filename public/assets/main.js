@@ -1,4 +1,13 @@
 (() => {
+  const EN = document.documentElement.lang === "en";
+  const t = EN
+    ? { photo: "Photo", post: "Instagram post", follow: (u) => `Follow @${u}`, fromIg: "From Instagram",
+        demo: "Demo posts. Once Instagram is connected, the latest posts appear here automatically.",
+        updated: "Updated", failed: "Instagram posts could not be loaded." }
+    : { photo: "写真", post: "Instagram の投稿", follow: (u) => `@${u} をフォローする`, fromIg: "Instagram より",
+        demo: "※デモ表示です。Instagram 連携後は実際の最新投稿に自動で切り替わります。",
+        updated: "最終更新", failed: "Instagram の投稿を読み込めませんでした。" };
+
   // ---- スクロール表示 ----
   const io = "IntersectionObserver" in window
     ? new IntersectionObserver((entries) => {
@@ -48,7 +57,7 @@
       const b = document.createElement("button");
       b.type = "button";
       b.setAttribute("role", "tab");
-      b.setAttribute("aria-label", el.querySelector("figcaption")?.textContent || `写真 ${n + 1}`);
+      b.setAttribute("aria-label", el.querySelector("figcaption")?.textContent || `${t.photo} ${n + 1}`);
       b.addEventListener("click", () => { show(n); play(); });
       hero.dots.append(b);
     });
@@ -80,7 +89,7 @@
       fig.className = "hero-slide";
       fig.style.setProperty("--img", `url("${p.image}")`);
       const cap = document.createElement("figcaption");
-      cap.textContent = "Instagram より";
+      cap.textContent = t.fromIg;
       fig.append(cap);
       hero.root.append(fig);
     });
@@ -131,7 +140,7 @@
       if (post.image) {
         const img = document.createElement("img");
         img.src = post.image;
-        img.alt = (post.caption || "Instagram の投稿").slice(0, 80);
+        img.alt = (post.caption || t.post).slice(0, 80);
         img.loading = "lazy";
         a.append(img);
       } else {
@@ -151,16 +160,16 @@
     });
 
     if (feed.profileUrl) follow.href = feed.profileUrl;
-    if (feed.username) follow.textContent = `@${feed.username} をフォローする`;
+    if (feed.username) follow.textContent = t.follow(feed.username);
     status.textContent = feed.demo
-      ? "※デモ表示です。Instagram 連携後は実際の最新投稿に自動で切り替わります。"
-      : `最終更新 ${fmt(feed.updatedAt)}`;
+      ? t.demo
+      : `${t.updated} ${fmt(feed.updatedAt)}`;
   };
 
-  fetch("/api/instagram")
+  fetch(`/api/instagram${EN ? "?lang=en" : ""}`)
     .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
     .then((feed) => { render(feed); addInstagramSlides(feed); })
     .catch(() => {
-      status.textContent = "Instagram の投稿を読み込めませんでした。";
+      status.textContent = t.failed;
     });
 })();

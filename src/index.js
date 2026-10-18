@@ -22,7 +22,7 @@ export default {
     const url = new URL(request.url);
 
     if (url.pathname === "/api/instagram" && request.method === "GET") {
-      return handleInstagram(env, ctx);
+      return handleInstagram(env, ctx, url.searchParams.get("lang") === "en" ? "en" : "ja");
     }
     if (url.pathname === "/api/event" && request.method === "POST") {
       return handleEvent(request, env);
@@ -43,10 +43,10 @@ export default {
   },
 };
 
-async function handleInstagram(env, ctx) {
+async function handleInstagram(env, ctx, lang) {
   const token = await getToken(env);
   if (!token) {
-    return json(demoFeed(env), 200, { "Cache-Control": "public, max-age=300" });
+    return json(demoFeed(env, lang), 200, { "Cache-Control": "public, max-age=300" });
   }
 
   let feed = env.IG_KV ? await env.IG_KV.get(FEED_KEY, "json") : null;
@@ -57,7 +57,7 @@ async function handleInstagram(env, ctx) {
     ctx.waitUntil(refreshFeed(env));
   }
   if (!feed) {
-    return json(demoFeed(env), 200, { "Cache-Control": "no-store" });
+    return json(demoFeed(env, lang), 200, { "Cache-Control": "no-store" });
   }
   return json(feed, 200, { "Cache-Control": "public, max-age=300" });
 }
@@ -149,8 +149,18 @@ function profileUrl(env) {
   return env.IG_USERNAME ? `https://www.instagram.com/${env.IG_USERNAME}/` : "https://www.instagram.com/";
 }
 
-function demoFeed(env) {
-  const captions = [
+function demoFeed(env, lang = "ja") {
+  const captions = lang === "en" ? [
+    "First visit? How to book, how long it takes, dress code and dietary requests.",
+    "Courses & prices — lunch and dinner, tax and service explained.",
+    "At the counter, the chef finishes Manyo beef right in front of you.",
+    "Roast Manyo beef. Resting the meat is part of the recipe.",
+    "A starter of seasonal vegetables from Kyoto growers.",
+    "Burgundy and Champagne, chosen by our sommelier and chef to suit Manyo beef.",
+    "Lunch only: the wagyu hamburg course.",
+    "Celebrating? Ask us for a message plate.",
+    "Shinmachi-dori, 5 minutes from Marutamachi Station.",
+  ] : [
     "初めての方へ｜ご予約からお帰りまで。所要時間・服装・お子様のご利用について。",
     "コースと料金｜ランチ・ディナーそれぞれの内容と税・サービス料のご案内。",
     "店内とお過ごし方｜カウンターでは目の前で万葉牛を仕上げます。",

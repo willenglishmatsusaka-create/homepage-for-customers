@@ -6,7 +6,7 @@ Cloudflare Workers（静的アセット＋API）だけで動きます。
 ## 構成
 
 ```
-public/            静的サイト（index.html / assets/styles.css / assets/main.js）
+public/            静的サイト（index.html＝日本語 / en/index.html＝英語 / assets/）
 src/index.js       Worker：/api/instagram（最新投稿）、/api/event（クリック計測）、Cron
 wrangler.jsonc     Cloudflare 設定
 ```
@@ -36,6 +36,18 @@ GitHub 連携で自動デプロイする場合は、Cloudflare ダッシュボ�
    npx wrangler deploy
    ```
 
+## 配色
+
+店内写真（カウンター）の色から作っています。`public/assets/styles.css` の `:root` で変更できます。
+
+| 役割 | 色 | 由来 |
+|---|---|---|
+| 背景 | `#1d1b18` | チャコールの壁 |
+| アクセント | `#d2a874` | 檜の一枚板 |
+| 予約ボタン | `#8e2c3c` | ボルドーのナプキン |
+| 文字 | `#f1e6cf` | LED の灯り |
+| 明るいセクション | `#f3ece0` | 檜の木肌 |
+
 ## 写真の差し替え
 
 `public/assets/photos/` に次のファイル名で JPEG を置くと、ページに自動で表示されます（無い場合は仮の枠が出ます）。
@@ -43,8 +55,8 @@ GitHub 連携で自動デプロイする場合は、Cloudflare ダッシュボ�
 
 | ファイル名 | 使われる場所 | 現在の写真（公式サイトより） |
 |---|---|---|
-| hero-1.jpg / hero-1-sp.jpg | カルーセル1枚目（PC／スマホ） | 土と若葉（旧メインビジュアル） |
-| hero-2.jpg | カルーセル2枚目 | カウンター |
+| counter-guest.jpg | カルーセル1枚目 | カウンター（Google 口コミ掲載写真） |
+| hero-1.jpg / hero-1-sp.jpg | カルーセル2枚目（PC／スマホ） | 土と若葉（旧メインビジュアル） |
 | hero-3.jpg | カルーセル3枚目 | 鳥取いなばの田園 |
 | chef.jpg | シェフ紹介 | 中西シェフ |
 | beef.jpg | 万葉牛 | 万葉牛の霜降り |
