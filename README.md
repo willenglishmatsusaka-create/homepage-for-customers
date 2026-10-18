@@ -13,7 +13,7 @@ wrangler.jsonc     Cloudflare 設定
 
 - **Instagram 連携**：Cron（30分ごと）で Instagram API から最新12件を取得して KV に保存。ページは `/api/instagram` を読むので、新しい投稿が自動で反映されます。長期トークン（60日）は7日ごとに自動延長。
 - **トークン未設定時**はデモ用の投稿（固定投稿3本の構成案を含む）を表示します。提案時はこの状態で見せられます。
-- **計測**：予約・電話・地図・Instagram のクリックを Workers Analytics Engine（`bien_manger_events`）に記録。予約完了数は TableCheck 側の数字と照合してください。
+- **計測**：予約・電話・地図・Instagram のクリックを Workers Analytics Engine（`bien_manger_events`）に記録。ダッシュボードで Analytics Engine を有効化し、`wrangler.jsonc` のコメントを外すと動きます（未設定時は計測をスキップ）。予約完了数は TableCheck 側の数字と照合してください。
 
 ## デモ公開（Cloudflare）
 
