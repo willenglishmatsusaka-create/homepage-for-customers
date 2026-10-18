@@ -49,7 +49,7 @@
   };
   const play = () => {
     clearInterval(hero.timer);
-    if (!reduceMotion) hero.timer = setInterval(() => show(hero.index + 1), 6000);
+    if (!reduceMotion) hero.timer = setInterval(() => show(hero.index + 1), 3500);
   };
   const buildDots = () => {
     hero.dots.textContent = "";

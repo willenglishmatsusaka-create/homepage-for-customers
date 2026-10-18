@@ -115,7 +115,7 @@ small { font-size: 0.78em; color: var(--ivory-dim); }
     radial-gradient(ellipse 40% 40% at 18% 22%, hsla(var(--tone), 40%, 40%, .12), transparent 70%),
     linear-gradient(180deg, #0d0b0a, var(--ink));
   opacity: 0; transform: scale(1.06);
-  transition: opacity 1.8s ease, transform 9s linear;
+  transition: opacity .9s ease, transform 4.5s linear;
 }
 .hero-slide.is-active { opacity: 1; transform: scale(1); }
 .hero-slide figcaption {
@@ -141,7 +141,7 @@ small { font-size: 0.78em; color: var(--ivory-dim); }
 .hero-dots { display: flex; gap: 10px; }
 .hero-dots button {
   width: 28px; height: 2px; padding: 0; border: 0; cursor: pointer;
-  background: rgba(239, 232, 220, .3); transition: background .4s, width .4s;
+  background: rgba(239, 232, 220, .3); transition: background .3s, width .3s;
 }
 .hero-dots button[aria-selected="true"] { background: var(--wood-hi); width: 44px; }
 @media (max-width: 640px) {
