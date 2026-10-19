@@ -96,6 +96,17 @@
     buildDots();
   };
 
+  // ---- スマホのメニュー ----
+  const menuBtn = document.querySelector(".menu-btn");
+  if (menuBtn) {
+    const setOpen = (on) => {
+      document.body.classList.toggle("nav-open", on);
+      menuBtn.setAttribute("aria-expanded", String(on));
+    };
+    menuBtn.addEventListener("click", () => setOpen(!document.body.classList.contains("nav-open")));
+    document.querySelectorAll(".nav a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+  }
+
   // ---- 要確認タグの表示切り替え（デモ用） ----
   const qToggle = document.querySelector(".q-toggle");
   if (qToggle) {

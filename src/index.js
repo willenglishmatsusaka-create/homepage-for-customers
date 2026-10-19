@@ -152,12 +152,12 @@ function profileUrl(env) {
 function demoFeed(env, lang = "ja") {
   // 連携前は店の写真で「最新投稿」の見え方を再現する
   const posts = [
-    ["wagyu-steak-closeup", "万葉牛のステーキ。焼き上がりを休ませる時間も、料理の一部です。", "Manyo beef steak, rested before slicing."],
-    ["starters-wine", "前菜の盛り合わせとサンセール。", "Starters with a glass of Sancerre."],
-    ["chef-open-kitchen", "目の前の厨房で、一皿ずつ仕上げます。", "Every plate finished in front of you."],
-    ["kamado-rice", "かまどで炊き上げるご飯で〆に。", "Rice cooked in a kamado pot."],
-    ["table-seats", "テーブル席。記念日の会食にも。", "Our table seating, ideal for celebrations."],
-    ["entrance-noren", "新町通の暖簾をくぐって。", "Through the noren on Shinmachi-dori."],
+    ["wagyu-steak-closeup", "銘柄和牛のステーキ。焼き上がりを休ませる時間も、料理の一部です。", "Brand wagyu steak, rested before carving."],
+    ["starters-sancerre", "前菜の盛り合わせとサンセール。", "Starters with a glass of Sancerre."],
+    ["chef-grill", "炭火の前で、一皿ずつ仕上げます。", "Every plate finished over charcoal."],
+    ["kamado", "左官職人が仕上げたかまどで、〆のご飯を。", "Rice from a kamado finished by a master plasterer."],
+    ["counter-wide", "檜の一枚板のカウンター。", "Our single-slab hinoki counter."],
+    ["exterior-noren", "新町通の暖簾をくぐって。", "Through the noren on Shinmachi-dori."],
   ];
   const now = Date.now();
   return {
