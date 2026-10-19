@@ -354,8 +354,8 @@ body.nav-open .menu-btn span:last-child { transform: translateY(-3.5px) rotate(-
 .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .access-grid > * { min-width: 0; }
 .map { width: 100%; aspect-ratio: 4 / 3; border: 0; filter: grayscale(.6); display: block; }
-.access-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-.access-photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.access-photos { margin-top: 10px; }
+.access-photos img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
 
 /* ---------- Instagram ---------- */
 .ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
