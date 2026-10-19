@@ -407,3 +407,13 @@ html:lang(en) body { letter-spacing: .01em; }
 :lang(en) .feature h2, :lang(en) .feature h3 { font-size: clamp(26px, 3vw, 32px); }
 .pc { display: none; }
 @media (min-width: 820px) { .pc { display: inline; } }
+
+/* ワインセレクションパートナー */
+.partner { display: grid; gap: 32px; margin-top: 96px; padding-top: 72px; border-top: 1px solid var(--line); align-items: start; }
+@media (min-width: 900px) { .partner { grid-template-columns: 1fr 1.25fr; gap: 72px; } }
+.partner figure img { width: 100%; aspect-ratio: 760 / 520; object-fit: cover; }
+.partner h3 { font-size: clamp(20px, 2.4vw, 26px); margin: 4px 0 6px; }
+.partner .by { font-size: 14px; color: var(--text-dim); margin-bottom: 22px; }
+.partner h4 { font-size: 16px; margin: 28px 0 12px; }
+.partner blockquote { margin: 0 0 24px; padding-left: 20px; border-left: 1px solid var(--wood); color: var(--text-dim); font-size: 15px; }
+:lang(en) .partner h3 { font-size: clamp(24px, 2.8vw, 30px); }
