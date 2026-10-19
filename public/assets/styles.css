@@ -422,3 +422,5 @@ html:lang(en) body { letter-spacing: .01em; }
 .partner h4 { font-size: 16px; margin: 28px 0 12px; }
 .partner blockquote { margin: 0 0 24px; padding-left: 20px; border-left: 1px solid var(--wood); color: var(--text-dim); font-size: 15px; }
 :lang(en) .partner h3 { font-size: clamp(24px, 2.8vw, 30px); }
+.page-head.tall figure { aspect-ratio: 2 / 1; max-height: 70svh; }
+@media (max-width: 640px) { .page-head.tall figure { aspect-ratio: 4 / 3; } }
