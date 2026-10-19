@@ -424,3 +424,4 @@ html:lang(en) body { letter-spacing: .01em; }
 :lang(en) .partner h3 { font-size: clamp(24px, 2.8vw, 30px); }
 .page-head.tall figure { aspect-ratio: 2 / 1; max-height: 70svh; }
 @media (max-width: 640px) { .page-head.tall figure { aspect-ratio: 4 / 3; } }
+.section-head .en-head { font-family: var(--serif-en); font-size: clamp(26px, 3vw, 34px); font-weight: 500; letter-spacing: .3em; color: var(--wood-deep); }
