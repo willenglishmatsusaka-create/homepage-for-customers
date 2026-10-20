@@ -46,13 +46,13 @@ function showBackupHelp() {
 async function createFromTemplate(t) {
   const p = t.make();
   await db.putProject(p);
-  location.hash = `#/edit/${p.id}`;
+  go(`#/edit/${p.id}`);
 }
 
 async function createFromExisting() {
   const p = newProject({ name: '取り込んだメニュー' });
   await db.putProject(p);
-  location.hash = `#/edit/${p.id}`;
+  go(`#/edit/${p.id}`);
   setTimeout(() => importExistingMenu(), 300);
 }
 
@@ -123,7 +123,7 @@ function projectCard(p) {
   const firstBg = p.pages[0]?.background.assetId || p.pages[0]?.underlay.assetId;
   const stale = p.updatedAt > (p.lastBackupAt || 0);
   return el('div', { class: 'project-card' },
-    el('a', { class: 'project-open', href: `#/edit/${p.id}` },
+    el('a', { class: 'project-open', href: `#/edit/${p.id}`, onclick: (e) => { e.preventDefault(); go(`#/edit/${p.id}`); } },
       el('span', { class: `project-thumb${p.paper.orientation === 'landscape' ? ' land' : ''}` }, firstBg ? el('img', { src: assetURL(firstBg), alt: '' }) : el('span', {}, p.name.slice(0, 1))),
       el('span', { class: 'project-meta' },
         el('strong', {}, p.name),
@@ -131,7 +131,7 @@ function projectCard(p) {
         el('small', {}, `更新：${formatDate(p.updatedAt)}`),
         el('small', { class: stale ? 'warn-text' : 'muted' }, `バックアップ：${p.lastBackupAt ? formatDate(p.lastBackupAt) : 'まだしていません'}`))),
     el('div', { class: 'btn-row' },
-      el('a', { class: 'btn small primary', href: `#/edit/${p.id}` }, '開く'),
+      el('a', { class: 'btn small primary', href: `#/edit/${p.id}`, onclick: (e) => { e.preventDefault(); go(`#/edit/${p.id}`); } }, '開く'),
       el('button', { class: 'btn small', title: '季節メニューなどに使うため、別名で複製します', onclick: async () => {
         const name = await promptDialog('複製して別名で保存', '新しいメニューの名前', `${p.name}（コピー）`);
         if (!name) return;
@@ -193,7 +193,7 @@ function buildEditor() {
   }, { title: '画像を含む編集データ一式をファイルに書き出します' });
   const topbar = el('header', { class: 'topbar' },
     el('div', { class: 'bar-row' },
-      el('a', { class: 'tool back', href: '#/', title: 'メニュー一覧に戻る' }, '← メニュー一覧'),
+      el('a', { class: 'tool back', href: '#/', title: 'メニュー一覧に戻る', onclick: (e) => { e.preventDefault(); go('#/'); } }, '← メニュー一覧'),
       nameInput, status,
       el('span', { class: 'sep' }),
       undoBtn, redoBtn,
@@ -323,7 +323,7 @@ async function openEditor(id) {
   const raw = await db.getProject(id);
   if (!raw) {
     toast('メニューが見つかりませんでした', 'error');
-    location.hash = '#/';
+    go('#/');
     return;
   }
   app.querySelector('.home')?.remove();
@@ -333,9 +333,24 @@ async function openEditor(id) {
   requestAnimationFrame(() => zoomToFit());
 }
 
+// 画面の切り替え。URL（#/edit/…）が変えられない環境でも動くよう、現在の画面を覚えておく
+let memoryRoute = location.hash;
+const currentRoute = () => (location.hash.startsWith('#/') ? location.hash : memoryRoute);
+
+function go(hash) {
+  memoryRoute = hash;
+  try {
+    if (location.hash !== hash) location.hash = hash;
+  } catch { /* URL を変えられない環境 */ }
+  // hashchange が届かない環境では直接切り替える
+  setTimeout(() => {
+    if (location.hash !== hash) route();
+  });
+}
+
 async function route() {
   flushSave();
-  const m = location.hash.match(/^#\/edit\/(.+)$/);
+  const m = currentRoute().match(/^#\/edit\/(.+)$/);
   if (m) await openEditor(decodeURIComponent(m[1]));
   else {
     state.project = null;
@@ -350,7 +365,7 @@ async function start() {
     app.replaceChildren(el('div', { class: 'home' }, el('h1', {}, 'メニュー編集ツール'), el('p', { class: 'warn-text' }, `ブラウザ内の保存領域を使えません（${err.message}）。シークレットウィンドウではなく、通常のウィンドウで開いてください。`)));
     return;
   }
-  window.addEventListener('hashchange', route);
+  window.addEventListener('hashchange', () => { memoryRoute = location.hash; route(); });
   window.addEventListener('resize', () => state.project && renderOverlays());
   route();
 }
