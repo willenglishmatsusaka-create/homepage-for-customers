@@ -339,6 +339,9 @@ body.nav-open .menu-btn span:last-child { transform: translateY(-3.5px) rotate(-
 .name-meaning { text-align: center; }
 .name-meaning h2 { font-family: var(--serif-en); font-size: clamp(30px, 4vw, 44px); letter-spacing: .24em; }
 .name-meaning p { font-family: var(--serif-ja); font-size: 18px; letter-spacing: .1em; margin-top: 18px; }
+.name-meaning p { line-height: 2.2; }
+.name-meaning .nm-ja { display: block; margin-bottom: 1.2em; font-size: 15px; letter-spacing: .3em; color: var(--text-dim); white-space: nowrap; }
+@media (max-width: 420px) { .name-meaning p { font-size: 16px; letter-spacing: .06em; } }
 
 /* ---------- ご来店案内 ---------- */
 .guide-list { border-top: 1px solid var(--line); }
