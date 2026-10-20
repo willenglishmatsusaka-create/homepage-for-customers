@@ -428,3 +428,6 @@ html:lang(en) body { letter-spacing: .01em; }
 .page-head.tall figure { aspect-ratio: 2 / 1; max-height: 70svh; }
 @media (max-width: 640px) { .page-head.tall figure { aspect-ratio: 4 / 3; } }
 .section-head .en-head { font-family: var(--serif-en); font-size: clamp(26px, 3vw, 34px); font-weight: 500; letter-spacing: .3em; color: var(--wood-deep); }
+:lang(en) .name-meaning h2 { letter-spacing: .24em; }
+:lang(en) .name-meaning .nm-ja { letter-spacing: .14em; font-style: italic; font-size: 16px; }
+:lang(en) .name-meaning p { line-height: 2; }
