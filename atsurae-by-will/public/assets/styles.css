@@ -84,17 +84,18 @@ img { max-width: 100%; display: block; }
 
 /* ヒーロー */
 .hero {
-  min-height: 82vh;
+  min-height: 88vh;
   display: grid;
   place-items: center;
   text-align: center;
-  padding: 80px 24px;
+  padding: 80px 24px 140px;
   background:
     radial-gradient(ellipse at 50% 120%, rgba(154, 123, 79, 0.14), transparent 60%),
     var(--paper);
 }
 .hero-kicker { font-family: var(--serif-en); font-style: italic; letter-spacing: 0.24em; color: var(--accent); font-size: 15px; margin: 0 0 28px; }
 .hero h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(34px, 6vw, 58px); letter-spacing: 0.22em; margin: 0 0 32px; line-height: 1.5; }
+.hero-axis { word-break: auto-phrase; font-family: var(--serif); font-size: clamp(16px, 2.2vw, 20px); letter-spacing: 0.12em; line-height: 1.9; margin: 0 0 20px; }
 .hero-lead { max-width: 560px; margin: 0 auto 44px; color: var(--ink-soft); }
 .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
@@ -108,6 +109,18 @@ img { max-width: 100%; display: block; }
 .section h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(24px, 3.4vw, 32px); letter-spacing: 0.14em; margin: 0 0 40px; line-height: 1.6; }
 .section-lead { max-width: 640px; color: var(--ink-soft); margin: -16px 0 56px; }
 .section-dark .section-lead { color: #c9ccd2; }
+
+/* 対象のお店 */
+.industries { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.industry { background: var(--white); border: 1px solid var(--line); padding: 32px 28px; }
+.industry-tag { display: inline-block; font-size: 11px; letter-spacing: 0.14em; background: var(--accent); color: var(--white); padding: 2px 10px; margin: 0 0 12px; }
+.industry h3 { font-family: var(--serif); font-weight: 500; font-size: 20px; letter-spacing: 0.1em; margin: 0 0 4px; }
+.industry-ex { font-size: 12px; color: var(--ink-soft); margin: 0 0 18px; }
+.industry dl { margin: 0; font-size: 14px; }
+.industry dt { font-size: 12px; color: var(--accent); letter-spacing: 0.1em; border-top: 1px solid var(--line); padding-top: 10px; }
+.industry dd { margin: 4px 0 14px; color: var(--ink-soft); }
+.industry dd:last-child { margin-bottom: 0; }
+.industries-note { font-size: 13px; color: var(--ink-soft); margin: 28px 0 0; }
 
 /* 考え方 */
 .philosophy { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
@@ -223,9 +236,95 @@ img { max-width: 100%; display: block; }
   .section { padding: 80px 0; }
   .wrap { padding: 0 16px; }
   .philosophy, .case, .monitor { grid-template-columns: 1fr; gap: 36px; }
-  .features, .price-grid, .price-grid.three { grid-template-columns: 1fr; }
+  .features, .price-grid, .price-grid.three, .industries { grid-template-columns: 1fr; }
   .steps li { grid-template-columns: 52px 1fr; gap: 16px; }
   .monitor { padding: 28px 22px; }
   .hero h1 { letter-spacing: 0.14em; }
+  .hero-axis { font-size: 15px; letter-spacing: 0.06em; }
+  .hero-mark { right: -8%; }
   .pc { display: none; }
+}
+
+/* ===== 動き ===== */
+
+/* ヘッダー：スクロールすると影が付く */
+.site-header { transition: box-shadow 0.4s, padding 0.4s; }
+.site-header.is-scrolled { box-shadow: 0 8px 24px -18px rgba(31, 42, 58, 0.5); padding-top: 10px; padding-bottom: 10px; }
+
+/* ヒーロー：ゆっくり動く光と、大きな「誂」の文字 */
+.hero { position: relative; overflow: hidden; }
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(154, 123, 79, 0.16), transparent 40%),
+    radial-gradient(circle at 70% 65%, rgba(31, 42, 58, 0.08), transparent 45%);
+  animation: drift 18s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+.hero-inner { position: relative; }
+.hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 120px; background: linear-gradient(to bottom, transparent, var(--paper)); pointer-events: none; }
+.hero-mark {
+  position: absolute;
+  right: 6%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--serif);
+  font-size: clamp(220px, 34vw, 460px);
+  line-height: 1;
+  color: var(--ink);
+  opacity: 0.028;
+  pointer-events: none;
+  user-select: none;
+  animation: float 12s ease-in-out infinite alternate;
+}
+@keyframes drift { from { transform: translate(-3%, -2%) rotate(0deg); } to { transform: translate(3%, 2%) rotate(6deg); } }
+@keyframes float { from { transform: translateY(-52%); } to { transform: translateY(-46%); } }
+
+/* ヒーローの文字が順に浮かび上がる */
+.hero-inner > * { opacity: 0; transform: translateY(18px); animation: rise 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+.hero-inner > :nth-child(1) { animation-delay: 0.2s; }
+.hero-inner > :nth-child(2) { animation-delay: 0.45s; }
+.hero-inner > :nth-child(3) { animation-delay: 0.8s; }
+.hero-inner > :nth-child(4) { animation-delay: 1s; }
+.hero-inner > :nth-child(5) { animation-delay: 1.2s; }
+@keyframes rise { to { opacity: 1; transform: none; } }
+
+/* 下へのしるし */
+.scroll-cue { position: absolute; left: 50%; bottom: 28px; width: 1px; height: 56px; background: var(--line); overflow: hidden; }
+.scroll-cue span { position: absolute; left: 0; top: -40%; width: 1px; height: 40%; background: var(--accent); animation: cue 2.4s ease-in-out infinite; }
+@keyframes cue { to { top: 100%; } }
+
+/* 見出しの下に金の線が伸びる */
+.section h2::after { content: ""; display: block; width: 0; height: 1px; background: var(--accent); margin-top: 18px; transition: width 1.2s 0.3s ease; }
+.contact h2::after { margin-left: auto; margin-right: auto; }
+.section h2.is-visible::after, .no-motion .section h2::after { width: 48px; }
+
+/* スクロールで現れる */
+.js .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.js .reveal.is-visible { opacity: 1; transform: none; }
+
+/* カード：ふれると少し浮き、上辺に金の線 */
+.industry, .price-card, .feature { position: relative; transition: transform 0.4s ease, box-shadow 0.4s ease; }
+.industry::before, .price-card::before { content: ""; position: absolute; left: 0; top: 0; height: 2px; width: 0; background: var(--accent); transition: width 0.5s ease; }
+@media (hover: hover) {
+  .industry:hover, .price-card:hover { transform: translateY(-4px); box-shadow: 0 18px 36px -24px rgba(31, 42, 58, 0.45); }
+  .industry:hover::before, .price-card:hover::before { width: 100%; }
+  .feature:hover { background: var(--white); }
+}
+
+/* ボタン：色がすっと入れ替わる */
+.btn { position: relative; overflow: hidden; z-index: 0; }
+.btn::after { content: ""; position: absolute; inset: 0; background: var(--accent); transform: scaleX(0); transform-origin: right; transition: transform 0.45s ease; z-index: -1; }
+.btn:hover::after { transform: scaleX(1); transform-origin: left; }
+.btn:hover { color: var(--white); border-color: var(--accent); }
+.btn-primary:hover { background: var(--ink); }
+
+/* 動きを減らす設定の方には動かさない */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .hero-inner > * { opacity: 1; transform: none; }
+  .js .reveal { opacity: 1; transform: none; }
+  .section h2::after { width: 48px; }
 }
