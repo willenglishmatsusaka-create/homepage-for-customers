@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "atsurae-by-will",
+  "compatibility_date": "2026-10-01",
+  // workers.dev の URL で公開する（ドメイン取得後にカスタムドメインを追加）
+  "workers_dev": true,
+  "assets": {
+    "directory": "./public"
+  }
+}
