@@ -65,7 +65,7 @@ if (slides.length > 1 && !reduceMotion) {
 
 // スクロールで要素を順に表示する
 const targets = document.querySelectorAll(
-  '.section .eyebrow, .section h2, .section-lead, .intro-grid p, .facts li, .work-text, .industry, .row-text, .timeline, .timeline li, .price-card, .monitor, .faq details, .contact-inner'
+  '.section .eyebrow, .section h2, .section-lead, .industry-index, .industry-index li, .intro-grid p, .facts li, .work-text, .industry, .row-text, .timeline, .timeline li, .price-card, .monitor, .faq details, .contact-inner'
 );
 const imageTargets = document.querySelectorAll('.reveal-img');
 
