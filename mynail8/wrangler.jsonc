@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "mynail8-demo",
+  "compatibility_date": "2026-10-01",
+  // workers.dev の URL で公開する（静的ファイルのみ・Worker のコードなし）
+  "workers_dev": true,
+  "assets": {
+    "directory": "."
+  }
+}

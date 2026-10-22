@@ -3,6 +3,28 @@
 三重県松阪市の自宅ネイルサロン My nail 8（Instagram [@my.nail8](https://www.instagram.com/my.nail8/)）向けの提案デモです。
 HTML / CSS / JS だけで動くので、`index.html` をブラウザで開けば確認できます。
 
+## Cloudflare で公開する
+
+`mynail8/` だけで独立した Cloudflare Workers（静的ファイルのみ、名前は `mynail8-demo`）として公開できます。BIEN MANGER のデモとは別の URL になります。
+
+**方法A：ダッシュボードから（ターミナル不要・おすすめ）**
+
+1. Cloudflare ダッシュボード → Workers & Pages → Create → Import a repository
+2. リポジトリ `homepage-for-customers` を選ぶ
+3. Root directory（ルートディレクトリ）に `mynail8` を指定
+4. Build command は空欄、Deploy command は `npx wrangler deploy` のまま → Deploy
+5. `https://mynail8-demo.<アカウント名>.workers.dev` で見られます。以降は GitHub に push するたびに自動で更新されます
+
+**方法B：ターミナルから**
+
+```sh
+cd mynail8
+npx wrangler login
+npx wrangler deploy
+```
+
+`wrangler.jsonc`・`README.md` は `.assetsignore` で公開対象から外しています。
+
 ## 構成（1ページ）
 
 ヒーロー → コンセプト → こだわり4つ → 巻き爪ケア → 人気のクロスネイル → Instagram ギャラリー → メニュー・料金 → ご予約の流れ → サロン案内・ネイリスト紹介 → Q&A → LINE 予約
