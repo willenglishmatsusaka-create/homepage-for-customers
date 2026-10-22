@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ATSURAE by Will | Bilingual websites, made to measure for each restaurant</title>
-  <meta name="description" content="Your craft, told in Japanese and English. Websites for independent restaurants, inns, sake breweries, experiences, salons and businesses for children in Japan. From JPY 330,000.">
-  <meta name="theme-color" content="#f6f3ee">
-  <meta property="og:title" content="ATSURAE by Will | Bilingual websites, made to measure">
-  <meta property="og:description" content="Japanese and English websites for independent restaurants, inns and workshops in Japan.">
+  <title>ATSURAE by Will | Your craft, told in Japanese and English</title>
+  <meta name="description" content="Bilingual websites for independent businesses in Japan: restaurants, inns, sake breweries, experiences, salons and businesses for children. Designed from scratch for each client, from JPY 330,000.">
+  <meta name="theme-color" content="#1f2a3a">
+  <meta property="og:title" content="ATSURAE by Will | Your craft, told in Japanese and English">
+  <meta property="og:description" content="Bilingual websites for independent businesses in Japan.">
   <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/works/bm-counter-wide.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Shippori+Mincho:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
@@ -21,15 +22,15 @@
 <header class="site-header">
   <a class="brand" href="/en/" aria-label="ATSURAE by Will">
     <span class="brand-en">ATSURAE <small>by Will</small></span>
-    <span class="brand-ja">Websites for restaurants, made to measure</span>
+    <span class="brand-ja">Websites for independent businesses</span>
   </a>
   <nav class="nav" id="site-nav" aria-label="Menu">
+    <a href="#works">Work</a>
     <a href="#for">Who it's for</a>
-    <a href="#philosophy">Philosophy</a>
     <a href="#features">What we do</a>
+    <a href="#flow">Process</a>
     <a href="#price">Price</a>
-    <a href="#case">Case</a>
-    <a class="btn btn-primary btn-sm" href="#contact">Contact</a>
+    <a class="btn btn-primary btn-sm" href="#contact">Get in touch</a>
   </nav>
   <div class="header-end">
     <a class="lang" href="/" hreflang="ja" lang="ja">JP</a>
@@ -39,105 +40,114 @@
 
 <main>
 
-  <section class="hero">
-    <span class="hero-mark" aria-hidden="true">誂</span>
+  <section class="hero" aria-label="ATSURAE by Will">
+    <div class="hero-slides" aria-hidden="true">
+      <div class="hero-slide is-active" style="--img: url('/assets/works/bm-counter-wide.webp')"></div>
+      <div class="hero-slide" style="--img: url('/assets/works/bm-beef-grill.webp')"></div>
+      <div class="hero-slide" style="--img: url('/assets/works/bm-kamado-bamboo.webp')"></div>
+      <div class="hero-slide" style="--img: url('/assets/works/bm-starters-sancerre.webp')"></div>
+      <div class="hero-slide" style="--img: url('/assets/works/bm-hinoki-grain.webp')"></div>
+    </div>
     <div class="hero-inner">
-      <p class="hero-kicker">Terroir &amp; Savoir-faire</p>
-      <h1>Made to measure,<br>for every table.</h1>
-      <p class="hero-axis">Your craft, told in Japanese and English.<br>Websites for independent businesses in Japan.</p>
-      <p class="hero-lead">Restaurants, inns, sake breweries, experiences, salons and businesses for children. No templates: each site is designed around the place, with bookings and ongoing care included.</p>
+      <p class="hero-kicker"><span>Terroir &amp; Savoir-faire</span></p>
+      <h1>
+        <span class="line"><span>Your craft, told in</span></span>
+        <span class="line"><span>Japanese and English.</span></span>
+      </h1>
+      <p class="hero-lead">Websites made to measure for independent businesses in Japan, with bookings and ongoing care included.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#contact">Get in touch</a>
-        <a class="btn btn-ghost" href="#price">See prices</a>
+        <a class="btn btn-light" href="#contact">Get in touch</a>
+        <a class="btn btn-outline-light" href="#works">See our work</a>
       </div>
     </div>
-    <a class="scroll-cue" href="#for" aria-label="Scroll down"><span></span></a>
+    <div class="hero-meta">
+      <p class="hero-caption">Photo: our work for BIEN MANGER, Kyoto</p>
+      <div class="hero-progress" aria-hidden="true"><span></span></div>
+    </div>
+    <a class="scroll-cue" href="#works" aria-label="Scroll down"><span>Scroll</span></a>
   </section>
 
-  <section class="section" id="for">
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <i>Restaurants</i><span>飲食店</span><i>Inns</i><span>宿</span><i>Sake breweries</i><span>酒蔵</span><i>Experiences</i><span>体験</span><i>Salons</i><span>美容室</span><i>For children</i><span>子ども</span>
+      <i>Restaurants</i><span>飲食店</span><i>Inns</i><span>宿</span><i>Sake breweries</i><span>酒蔵</span><i>Experiences</i><span>体験</span><i>Salons</i><span>美容室</span><i>For children</i><span>子ども</span>
+    </div>
+  </div>
+
+  <section class="section works" id="works">
+    <div class="wrap">
+      <p class="eyebrow">Work</p>
+      <h2>Our work</h2>
+    </div>
+    <div class="wrap work-feature">
+      <div class="devices">
+        <figure class="device-laptop reveal-img">
+          <img src="/assets/works/bm-en-desk.webp" alt="BIEN MANGER English home page on a laptop" loading="lazy" width="1440" height="900">
+        </figure>
+        <figure class="device-phone reveal-img">
+          <img src="/assets/works/bm-top-phone.webp" alt="BIEN MANGER home page on a phone" loading="lazy" width="585" height="1266">
+        </figure>
+      </div>
+      <div class="work-text">
+        <p class="work-tag">Restaurant | Marutamachi, Kyoto</p>
+        <h3>BIEN MANGER<small>Wagyu steak and French cuisine</small></h3>
+        <p>Five pages in Japanese and English. The site introduces the craftspeople behind the restaurant, from the earthen walls and rice stove to the cypress counter and the wine partner.</p>
+        <dl>
+          <dt>Pages</dt><dd>Home, cuisine and wine, space and craft, chef, visitor guide</dd>
+          <dt>Booking</dt><dd>TableCheck, Ikyu, Tabelog, phone</dd>
+          <dt>Features</dt><dd>Instagram feed, click tracking</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="work-gallery" aria-label="Photos of BIEN MANGER">
+      <div class="gallery-track">
+        <img src="/assets/works/bm-exterior-dusk.webp" alt="Entrance and noren curtain at dusk" loading="lazy">
+        <img src="/assets/works/bm-chef-grill.webp" alt="The chef grilling over charcoal" loading="lazy">
+        <img src="/assets/works/bm-fish-dish.webp" alt="Fish course" loading="lazy">
+        <img src="/assets/works/bm-passage-earthwall.webp" alt="Passage with an earthen wall" loading="lazy">
+        <img src="/assets/works/bm-sideboard-glasses.webp" alt="Sideboard with wine glasses" loading="lazy">
+        <img src="/assets/works/bm-counter-chairs-row.webp" alt="Counter chairs" loading="lazy">
+        <img src="/assets/works/bm-exterior-dusk.webp" alt="" loading="lazy" aria-hidden="true">
+        <img src="/assets/works/bm-chef-grill.webp" alt="" loading="lazy" aria-hidden="true">
+        <img src="/assets/works/bm-fish-dish.webp" alt="" loading="lazy" aria-hidden="true">
+        <img src="/assets/works/bm-passage-earthwall.webp" alt="" loading="lazy" aria-hidden="true">
+        <img src="/assets/works/bm-sideboard-glasses.webp" alt="" loading="lazy" aria-hidden="true">
+        <img src="/assets/works/bm-counter-chairs-row.webp" alt="" loading="lazy" aria-hidden="true">
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="for">
     <div class="wrap">
       <p class="eyebrow">Who it's for</p>
       <h2>Built for places like these.</h2>
       <div class="industries">
         <article class="industry">
-          <p class="industry-tag">Case study</p>
-          <h3>Restaurants</h3>
-          <p class="industry-ex">French, kappo, sushi, yakiniku, wine bars</p>
-          <dl>
-            <dt>What we do</dt>
-            <dd>Booking links to TableCheck and similar, plus direct reservations.</dd>
-          </dl>
+          <div class="industry-visual has-photo" style="--img: url('/assets/works/bm-counter-wide.webp')"><span class="industry-tag">Case study</span></div>
+          <div class="industry-body"><h3>Restaurants</h3><p class="industry-ex">French, kappo, sushi, yakiniku, wine bars</p><p>Food and the people behind it, in both languages, with booking links and direct reservations.</p></div>
         </article>
         <article class="industry">
-          <h3>Inns</h3>
-          <p class="industry-ex">Private rental houses, small ryokan, guesthouses</p>
-          <dl>
-            <dt>What we do</dt>
-            <dd>Rooms and the neighbourhood introduced in both languages, with direct booking.</dd>
-          </dl>
+          <div class="industry-visual" data-kanji="宿" data-en="Inn"></div>
+          <div class="industry-body"><h3>Inns</h3><p class="industry-ex">Rental houses, small ryokan, guesthouses</p><p>Rooms and the neighbourhood introduced clearly, with a path to direct booking.</p></div>
         </article>
         <article class="industry">
-          <h3>Sake breweries and tea shops</h3>
-          <p class="industry-ex">Breweries, tea merchants, confectioners</p>
-          <dl>
-            <dt>What we do</dt>
-            <dd>The story of the water, rice and brewers, with tour and tasting bookings.</dd>
-          </dl>
+          <div class="industry-visual" data-kanji="蔵" data-en="Sake brewery"></div>
+          <div class="industry-body"><h3>Sake breweries and tea shops</h3><p class="industry-ex">Breweries, tea merchants, confectioners</p><p>The story of the water, rice and brewers, with tour and tasting bookings.</p></div>
         </article>
         <article class="industry">
-          <h3>Experiences and workshops</h3>
-          <p class="industry-ex">Tea ceremony, kimono, cooking, pottery, kintsugi</p>
-          <dl>
-            <dt>What we do</dt>
-            <dd>What happens, how long it takes and what it costs, made clear for overseas guests.</dd>
-          </dl>
+          <div class="industry-visual" data-kanji="体" data-en="Experience"></div>
+          <div class="industry-body"><h3>Experiences and workshops</h3><p class="industry-ex">Tea ceremony, kimono, cooking, pottery, kintsugi</p><p>What happens, how long it takes and what it costs, made clear for overseas guests.</p></div>
         </article>
         <article class="industry">
-          <h3>Hair and nail salons</h3>
-          <p class="industry-ex">Independent hair, nail and lash salons</p>
-          <dl>
-            <dt>What we do</dt>
-            <dd>Your work shown from Instagram, a bilingual menu and direct booking.</dd>
-          </dl>
+          <div class="industry-visual" data-kanji="美" data-en="Salon"></div>
+          <div class="industry-body"><h3>Hair and nail salons</h3><p class="industry-ex">Independent hair, nail and lash salons</p><p>Your work shown from Instagram, a bilingual menu and direct booking.</p></div>
         </article>
         <article class="industry">
-          <h3>For children</h3>
-          <p class="industry-ex">Children's photo studios, English and lesson schools</p>
-          <dl>
-            <dt>What we do</dt>
-            <dd>Sample photos, clear plans and an English page for international parents.</dd>
-          </dl>
+          <div class="industry-visual" data-kanji="子" data-en="For children"></div>
+          <div class="industry-body"><h3>For children</h3><p class="industry-ex">Children's photo studios, English and lesson schools</p><p>Sample photos, clear plans and an English page for international parents.</p></div>
         </article>
       </div>
       <p class="industries-note">Chinese (traditional or simplified) and Korean can be added on request.</p>
-    </div>
-  </section>
-
-  <section class="section section-dark" id="philosophy">
-    <div class="wrap philosophy">
-      <div class="philosophy-body">
-        <p class="eyebrow">Philosophy</p>
-        <h2>The character of the place,<br>and the people behind it.</h2>
-        <p>A good restaurant exists for reasons you can only find in that place: the plasterer who finished the earthen walls, the carpenter who planed the cypress counter, the sommelier who chooses the wine.</p>
-        <p>We start by listening to those stories, then choose the photographs and words one by one, so the atmosphere comes through in both Japanese and English.</p>
-      </div>
-      <div class="philosophy-words">
-        <div class="word">
-          <p class="word-ja">The place</p>
-          <p class="word-en">Terroir</p>
-          <p>The soil, climate and people that give a place its character.</p>
-        </div>
-        <div class="word">
-          <p class="word-ja">The craft</p>
-          <p class="word-en">Savoir-faire</p>
-          <p>The skill of the people who make the food, the room and the tableware.</p>
-        </div>
-        <div class="word">
-          <p class="word-ja">The fit</p>
-          <p class="word-en">Atsurae</p>
-          <p>Japanese for &ldquo;made to order&rdquo;: tailored to each client, never fitted into a template.</p>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -145,136 +155,77 @@
     <div class="wrap">
       <p class="eyebrow">What we do</p>
       <h2>More than a good-looking page.</h2>
-      <div class="features">
-        <div class="feature">
-          <p class="feature-no">01</p>
-          <h3>Designed for each client</h3>
-          <p>The structure and design follow your photographs and your story.</p>
-        </div>
-        <div class="feature">
-          <p class="feature-no">02</p>
-          <h3>Written in English, not translated by machine</h3>
-          <p>English copy written for overseas guests by a team with a background in English education.</p>
-        </div>
-        <div class="feature">
-          <p class="feature-no">03</p>
-          <h3>Clear booking links</h3>
-          <p>Booking sites, reservation systems, phone or LINE, placed where guests look for them.</p>
-        </div>
-        <div class="feature">
-          <p class="feature-no">04</p>
-          <h3>Instagram, automatically</h3>
-          <p>New posts appear on the site by themselves, so it always looks current.</p>
-        </div>
-        <div class="feature">
-          <p class="feature-no">05</p>
-          <h3>Measured results</h3>
-          <p>We count clicks on the booking, phone and map buttons, and improve from the numbers.</p>
-        </div>
-        <div class="feature">
-          <p class="feature-no">06</p>
-          <h3>Looked after</h3>
-          <p>Menu updates, Instagram connection and troubleshooting, covered by a monthly plan.</p>
-        </div>
+    </div>
+    <div class="wrap rows">
+      <div class="row">
+        <figure class="row-img reveal-img"><img src="/assets/works/bm-space-desk.webp" alt="A page introducing the space and its craftspeople" loading="lazy" width="1440" height="900"></figure>
+        <div class="row-text"><p class="row-no">01</p><h3>Designed for each client</h3><p>No templates. The structure and design follow your photographs and your story.</p></div>
+      </div>
+      <div class="row">
+        <figure class="row-img reveal-img"><img src="/assets/works/bm-en-desk.webp" alt="The English version of a page" loading="lazy" width="1440" height="900"></figure>
+        <div class="row-text"><p class="row-no">02</p><h3>English written by people, not machines</h3><p>English copy written for overseas guests by a team with a background in English education.</p></div>
+      </div>
+      <div class="row">
+        <figure class="row-img row-img-phone reveal-img"><img src="/assets/works/bm-guide-phone.webp" alt="Booking buttons on a phone" loading="lazy" width="585" height="1266"></figure>
+        <div class="row-text"><p class="row-no">03</p><h3>Clear booking, on every screen</h3><p>Booking sites, reservation systems, phone or LINE, always one tap away. We count every click.</p></div>
+      </div>
+      <div class="row">
+        <figure class="row-img reveal-img"><img src="/assets/works/bm-sideboard-glasses.webp" alt="Sideboard with wine glasses" loading="lazy" width="1566" height="1044"></figure>
+        <div class="row-text"><p class="row-no">04</p><h3>Looked after</h3><p>New Instagram posts appear automatically. Menu updates, the Instagram connection and troubleshooting are covered by a monthly plan.</p></div>
       </div>
     </div>
   </section>
 
-  <section class="section section-alt" id="price">
+  <section class="section section-dark" id="flow">
+    <div class="wrap">
+      <p class="eyebrow">Process</p>
+      <h2>How it works</h2>
+      <ol class="timeline">
+        <li><span class="t-no">01</span><h3>Consultation</h3><p class="t-time">Free</p><p>We hear what you want to change.</p></li>
+        <li><span class="t-no">02</span><h3>Interview and plan</h3><p class="t-time">About 1 week</p><p>Pages, photos and words are decided.</p></li>
+        <li><span class="t-no">03</span><h3>Writing and design</h3><p class="t-time">2&ndash;3 weeks</p><p>Bilingual copy and design, checked with you.</p></li>
+        <li><span class="t-no">04</span><h3>Launch</h3><p class="t-time">About 1 week</p><p>Connected to your booking and Instagram.</p></li>
+        <li><span class="t-no">05</span><h3>Care</h3><p class="t-time">Monthly</p><p>Updates and maintenance on a monthly plan.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="price">
     <div class="wrap">
       <p class="eyebrow">Price</p>
       <h2>Price</h2>
       <p class="section-lead">All prices include 10% consumption tax. Website prices assume a monthly plan of at least 12 months.</p>
-
-      <h3 class="price-heading">Website</h3>
       <div class="price-grid">
         <div class="price-card is-featured">
+          <span class="badge">For independent shops</span>
           <p class="price-name">Original</p>
           <p class="price-sub">5 pages, Japanese and English</p>
           <p class="price">330,000<small>JPY</small></p>
-          <p class="price-note">About 5&ndash;6 weeks</p>
-          <ul>
-            <li>Interview and bilingual copywriting</li>
-            <li>Booking links and Instagram feed</li>
-            <li>Click tracking</li>
-            <li>Up to 3 rounds of revisions</li>
-          </ul>
+          <ul><li>Interview and bilingual copywriting</li><li>Booking links and Instagram feed</li><li>Click tracking</li><li>Up to 3 rounds of revisions</li></ul>
         </div>
         <div class="price-card">
+          <span class="badge badge-light">Built from interviews</span>
           <p class="price-name">Full order</p>
-          <p class="price-sub">8 pages, Japanese, English and one more language</p>
+          <p class="price-sub">8 pages, plus one more language</p>
           <p class="price">660,000<small>JPY&ndash;</small></p>
-          <p class="price-note">About 8&ndash;10 weeks</p>
-          <ul>
-            <li>Up to 2 interviews and bilingual copywriting</li>
-            <li>Chinese or Korean added</li>
-            <li>Photo shoot planning (shoot fee separate)</li>
-            <li>Report 3 months after launch</li>
-          </ul>
+          <ul><li>Up to 2 interviews</li><li>Chinese or Korean added</li><li>Photo shoot planning (fee separate)</li><li>Report 3 months after launch</li></ul>
         </div>
       </div>
-
-      <h3 class="price-heading">Monthly plans</h3>
       <div class="price-grid three">
-        <div class="price-card">
-          <p class="price-name">Care</p>
-          <p class="price">5,500<small>JPY / month</small></p>
-          <ul>
-            <li>Hosting and Instagram connection</li>
-            <li>Troubleshooting</li>
-            <li>1 small change a month</li>
-          </ul>
-        </div>
-        <div class="price-card is-featured">
-          <p class="price-name">Update</p>
-          <p class="price">11,000<small>JPY / month</small></p>
-          <ul>
-            <li>Everything in Care</li>
-            <li>3 changes a month</li>
-            <li>Menu, price and opening-day updates</li>
-          </ul>
-        </div>
-        <div class="price-card">
-          <p class="price-name">Partner</p>
-          <p class="price">22,000<small>JPY / month</small></p>
-          <ul>
-            <li>Everything in Update</li>
-            <li>6 changes a month</li>
-            <li>Monthly report with suggestions</li>
-            <li>One seasonal page a month</li>
-          </ul>
-        </div>
+        <div class="price-card"><p class="price-name">Care</p><p class="price">5,500<small>JPY / month</small></p><ul><li>Hosting and Instagram connection</li><li>Troubleshooting</li><li>1 small change a month</li></ul></div>
+        <div class="price-card is-featured"><span class="badge">Recommended</span><p class="price-name">Update</p><p class="price">11,000<small>JPY / month</small></p><ul><li>Everything in Care</li><li>3 changes a month</li><li>Menu, price and opening-day updates</li></ul></div>
+        <div class="price-card"><p class="price-name">Partner</p><p class="price">22,000<small>JPY / month</small></p><ul><li>Everything in Update</li><li>6 changes a month</li><li>Monthly report with suggestions</li><li>One seasonal page a month</li></ul></div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="case">
-    <div class="wrap case">
-      <div class="case-frame" aria-hidden="true">
-        <div class="case-frame-bar"><span></span><span></span><span></span></div>
-        <div class="case-frame-body">
-          <div>
-            <p>BIEN MANGER</p>
-            <small>Marutamachi, Kyoto</small>
-          </div>
-        </div>
-      </div>
-      <div>
-        <p class="eyebrow">Case</p>
-        <h3>BIEN MANGER</h3>
-        <p class="case-meta">Wagyu steak and French cuisine, Kyoto</p>
-        <p>Five pages in Japanese and English, with links to TableCheck, Ikyu, Tabelog and phone booking. The site introduces the craftspeople behind the restaurant, from the earthen walls and rice stove to the cypress counter and the wine partner.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-dark contact" id="contact">
-    <div class="wrap">
+  <section class="contact" id="contact" style="--img: url('/assets/works/bm-passage-earthwall.webp')">
+    <div class="wrap contact-inner">
       <p class="eyebrow">Contact</p>
       <h2>Tell us about your place.</h2>
-      <p class="section-lead">Consultations and quotes are free. We reply in English or Japanese.</p>
+      <p>Consultations and quotes are free. We reply in English or Japanese, usually within two business days.</p>
       <div class="contact-actions">
-        <a class="btn btn-primary" href="mailto:info@atsurae-will.com?subject=Website%20enquiry">Email us</a>
+        <a class="btn btn-light" href="mailto:info@atsurae-will.com?subject=Website%20enquiry">Email us</a>
       </div>
     </div>
   </section>
@@ -285,6 +236,8 @@
   <span class="brand-en">ATSURAE <small>by Will</small></span>
   <p>Operated by Yugen Kaisha Will (有限会社Will), Japan</p>
 </footer>
+
+<a class="float-cta" href="#contact">Get in touch</a>
 
 <script src="/assets/main.js" defer></script>
 </body>
