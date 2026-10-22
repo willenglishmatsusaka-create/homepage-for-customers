@@ -138,6 +138,8 @@ h1, h2, h3, .hero-lead { word-break: auto-phrase; }
 .hero-kicker > span { animation-delay: 0.15s; }
 .hero-lead, .hero-actions { opacity: 0; animation: fadeUp 1.2s var(--ease) 1s forwards; }
 .hero-actions { animation-delay: 1.2s; display: flex; gap: 16px; flex-wrap: wrap; }
+.hero-langs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; opacity: 0; animation: fadeUp 1.2s var(--ease) 0.85s forwards; }
+.hero-langs span { border: 1px solid rgba(255, 255, 255, 0.55); padding: 2px 12px; font-size: 13px; letter-spacing: 0.08em; }
 .hero-lead { font-size: 16px; margin: 0 0 36px; max-width: 560px; }
 @keyframes lineUp { to { transform: none; } }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
@@ -245,6 +247,10 @@ h1, h2, h3, .hero-lead { word-break: auto-phrase; }
 .row-no { font-family: var(--serif-en); font-size: 54px; line-height: 1; color: var(--accent); margin: 0 0 12px; font-variant-numeric: lining-nums; }
 .row-text h3 { font-family: var(--serif); font-weight: 500; font-size: 23px; letter-spacing: 0.1em; margin: 0 0 16px; }
 .row-text p:last-child { color: var(--ink-soft); margin: 0; }
+
+.lang-list { list-style: none; padding: 0; margin: 22px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.lang-list li { border: 1px solid var(--line); background: var(--white); padding: 10px 14px; font-size: 12px; color: var(--ink-soft); display: flex; flex-direction: column; }
+.lang-list span { font-family: var(--serif); font-size: 16px; color: var(--ink); letter-spacing: 0.04em; }
 
 /* ===== 制作の流れ ===== */
 .timeline { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; position: relative; }
@@ -405,7 +411,7 @@ h1, h2, h3, .hero-lead { word-break: auto-phrase; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .hero h1 .line > span, .hero-kicker > span { transform: none; }
-  .hero-lead, .hero-actions { opacity: 1; }
+  .hero-lead, .hero-actions, .hero-langs { opacity: 1; }
   .js .reveal, .js .reveal-img, .js .reveal-img img { opacity: 1; transform: none; clip-path: none; }
   .section h2::after { width: 56px; }
   .timeline::after { width: 100%; }
