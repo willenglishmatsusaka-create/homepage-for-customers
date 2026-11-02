@@ -431,3 +431,4 @@ html:lang(en) body { letter-spacing: .01em; }
 :lang(en) .name-meaning h2 { letter-spacing: .24em; }
 :lang(en) .name-meaning .nm-ja { letter-spacing: .14em; font-style: italic; font-size: 16px; }
 :lang(en) .name-meaning p { line-height: 2; }
+.partner > * { min-width: 0; }

@@ -154,7 +154,7 @@ function demoFeed(env, lang = "ja") {
   const posts = [
     ["wagyu-steak-closeup", "銘柄和牛のステーキ。焼き上がりを休ませる時間も、料理の一部です。", "Brand wagyu steak, rested before carving."],
     ["starters-sancerre", "前菜の盛り合わせとサンセール。", "Starters with a glass of Sancerre."],
-    ["chef-grill", "炭火の前で、一皿ずつ仕上げます。", "Every plate finished over charcoal."],
+    ["chef-grill", "焼き場で、一皿ずつ仕上げます。", "Every plate finished at the grill."],
     ["kamado", "左官職人が仕上げたかまどで、〆のご飯を。", "Rice from a kamado finished by a master plasterer."],
     ["counter-wide", "檜の一枚板のカウンター。", "Our single-slab hinoki counter."],
     ["exterior-noren", "新町通の暖簾をくぐって。", "Through the noren on Shinmachi-dori."],
