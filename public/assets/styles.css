@@ -432,3 +432,13 @@ html:lang(en) body { letter-spacing: .01em; }
 :lang(en) .name-meaning .nm-ja { letter-spacing: .14em; font-style: italic; font-size: 16px; }
 :lang(en) .name-meaning p { line-height: 2; }
 .partner > * { min-width: 0; }
+
+/* 野菜の生産者（ワインの下） */
+.producer-sec .partner { margin-top: 0; padding-top: 0; border-top: 0; }
+.veg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 56px; }
+.veg-grid img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+.veg-grid figcaption { margin-top: 8px; font-family: var(--serif-ja); font-size: 14px; letter-spacing: .08em; color: var(--text-dim); }
+:lang(en) .veg-grid figcaption { font-family: var(--serif-en); font-size: 16px; }
+@media (max-width: 760px) { .veg-grid { grid-template-columns: 1fr 1fr; margin-top: 36px; } }
+.brand-en { white-space: nowrap; }
+@media (max-width: 380px) { .brand-en { font-size: 19px; letter-spacing: .22em; } .brand-ja { letter-spacing: .12em; } }
