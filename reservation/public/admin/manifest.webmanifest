@@ -1,0 +1,14 @@
+{
+  "name": "予約台帳",
+  "short_name": "予約台帳",
+  "start_url": "/admin/",
+  "scope": "/admin/",
+  "display": "standalone",
+  "background_color": "#f6f4f0",
+  "theme_color": "#f6f4f0",
+  "lang": "ja",
+  "icons": [
+    { "src": "/admin/icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/admin/icon-180.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

@@ -10,11 +10,14 @@
  *   POST manage/:token/cancel      予約のキャンセル
  *
  * お店向け（/admin/api/:store/…、Authorization: Bearer ADMIN_TOKEN）
- *   GET   reservations?date=       その日の予約（台帳）
+ *   GET   config                   営業設定（席・営業枠・コース・受付ルール）
+ *   GET   summary?from=&days=      日ごと・営業枠ごとの予約数と席数（カレンダー用）
+ *   GET   reservations?date=       その日の予約（台帳）と営業枠ごとの集計
  *   POST  reservations             電話などの予約を手入力（force で席数を超えて入れられる）
  *   PATCH reservations/:id         状態・メモ・席の変更
  *   GET   customers?q=             顧客検索（名前・ふりがな・電話番号）
- *   POST  overrides / DELETE overrides/:id  臨時休業・臨時営業・席を閉じる
+ *   GET   customers/:id / PATCH customers/:id  顧客の詳細と来店履歴、メモなどの更新
+ *   GET   overrides?from=&to= / POST overrides / DELETE overrides/:id  臨時休業・臨時営業・席を閉じる
  *
  * ADMIN_TOKEN は試行用の仮の認証。店主ごとのログイン（メールのリンク）に置き換える予定。
  */
@@ -26,12 +29,17 @@ import {
   isPeriodOpen,
   listSlots,
   type RejectReason,
+  summarizeDay,
   type Source,
   type Status,
 } from "./availability";
 import {
   addOverride,
+  countByDay,
   deleteOverride,
+  getCustomer,
+  listOverrides,
+  updateCustomer,
   type FullConfig,
   getReservation,
   getReservationByToken,
@@ -262,13 +270,58 @@ app.post("/api/:store/manage/:token/cancel", async (c) => {
 
 // ---------- お店向け ----------
 
+app.get("/admin/api/:store/config", async (c) => {
+  const store = c.get("store");
+  const today = jstNow().date;
+  const config = await loadConfig(c.env.DB, store, today, today);
+  return c.json({
+    store: { slug: store.slug, name: store.name, nameEn: store.nameEn, theme: store.theme },
+    today,
+    policy: config.policy,
+    seatGroups: config.seatGroups,
+    periods: config.periods,
+    courses: config.courses,
+  });
+});
+
+app.get("/admin/api/:store/summary", async (c) => {
+  const store = c.get("store");
+  const from = c.req.query("from") ?? jstNow().date;
+  const days = Number(c.req.query("days") ?? 42);
+  if (!isValidDate(from) || !Number.isInteger(days) || days < 1 || days > 62) {
+    return c.json({ error: "invalid_query" }, 400);
+  }
+  const to = addDays(from, days - 1);
+  const [config, counts] = await Promise.all([
+    loadConfig(c.env.DB, store, from, to),
+    countByDay(c.env.DB, store.id, from, to),
+  ]);
+  const result = [];
+  for (let i = 0; i < days; i++) {
+    const date = addDays(from, i);
+    result.push({ date, periods: summarizeDay(config, date, counts.get(date) ?? new Map()) });
+  }
+  return c.json({ from, days: result });
+});
+
 app.get("/admin/api/:store/reservations", async (c) => {
   const store = c.get("store");
   const date = c.req.query("date") ?? jstNow().date;
   if (!isValidDate(date)) return c.json({ error: "invalid_query" }, 400);
-  const reservations = await listReservations(c.env.DB, store.id, date);
+  const [reservations, config, counts, overrides] = await Promise.all([
+    listReservations(c.env.DB, store.id, date),
+    loadConfig(c.env.DB, store, date, date),
+    countByDay(c.env.DB, store.id, date, date),
+    listOverrides(c.env.DB, store.id, date, date),
+  ]);
   const active = reservations.filter((r) => r.status === "confirmed" || r.status === "seated" || r.status === "done");
-  return c.json({ date, totalGuests: active.reduce((s, r) => s + r.partySize, 0), reservations });
+  return c.json({
+    date,
+    totalGuests: active.reduce((s, r) => s + r.partySize, 0),
+    periods: summarizeDay(config, date, counts.get(date) ?? new Map()),
+    overrides,
+    reservations,
+  });
 });
 
 app.post("/admin/api/:store/reservations", async (c) => {
@@ -375,6 +428,54 @@ app.get("/admin/api/:store/customers", async (c) => {
   const q = (c.req.query("q") ?? "").trim();
   if (q.length < 1) return c.json({ customers: [] });
   return c.json({ customers: await searchCustomers(c.env.DB, c.get("store").id, q.slice(0, 50)) });
+});
+
+app.get("/admin/api/:store/customers/:id", async (c) => {
+  const customer = await getCustomer(c.env.DB, c.get("store").id, c.req.param("id"));
+  return customer ? c.json(customer) : c.json({ error: "not_found" }, 404);
+});
+
+app.patch("/admin/api/:store/customers/:id", async (c) => {
+  const store = c.get("store");
+  const body = await readJson(c);
+  if (!body) return c.json({ error: "invalid_body" }, 400);
+  const text = (k: string, max: number) => (body[k] === undefined ? undefined : cleanText(body[k], max));
+  const name = text("name", 80);
+  if (body.name !== undefined && !name) return c.json({ error: "invalid_body", fields: ["name"] }, 400);
+  const email = text("email", 254);
+  if (email && !isEmail(email)) return c.json({ error: "invalid_body", fields: ["email"] }, 400);
+  let anniversaries: { label: string; date: string }[] | undefined;
+  if (body.anniversaries !== undefined) {
+    if (!Array.isArray(body.anniversaries)) return c.json({ error: "invalid_body", fields: ["anniversaries"] }, 400);
+    anniversaries = body.anniversaries
+      .slice(0, 10)
+      .map((a: any) => ({ label: cleanText(a?.label, 40) ?? "", date: cleanText(a?.date, 10) ?? "" }))
+      .filter((a: { label: string; date: string }) => a.label || a.date);
+  }
+  try {
+    const ok = await updateCustomer(c.env.DB, store.id, c.req.param("id"), {
+      name: name ?? undefined,
+      kana: text("kana", 80),
+      phone: body.phone === undefined ? undefined : normalizePhone(body.phone),
+      email,
+      allergies: text("allergies", 500),
+      preferences: text("preferences", 1000),
+      notes: text("notes", 2000),
+      anniversaries,
+    });
+    if (!ok) return c.json({ error: "not_found" }, 404);
+  } catch (e) {
+    if (String(e).includes("UNIQUE")) return c.json({ error: "phone_in_use" }, 409);
+    throw e;
+  }
+  return c.json(await getCustomer(c.env.DB, store.id, c.req.param("id")));
+});
+
+app.get("/admin/api/:store/overrides", async (c) => {
+  const from = c.req.query("from") ?? jstNow().date;
+  const to = c.req.query("to") ?? addDays(from, 180);
+  if (!isValidDate(from) || !isValidDate(to)) return c.json({ error: "invalid_query" }, 400);
+  return c.json({ overrides: await listOverrides(c.env.DB, c.get("store").id, from, to) });
 });
 
 app.post("/admin/api/:store/overrides", async (c) => {

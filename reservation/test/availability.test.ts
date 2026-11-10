@@ -174,3 +174,15 @@ describe("listSlots", () => {
     expect(dinner.every((s) => s.options.every((o) => o.courseId !== "wagyu"))).toBe(true);
   });
 });
+
+describe("summarizeDay", () => {
+  it("営業枠ごとに席数・人数・組数・営業の有無を返す", async () => {
+    const { summarizeDay } = await import("../src/availability");
+    const counts = new Map([["dinner", { guests: 6, groups: 2 }]]);
+    expect(summarizeDay(config(), THU, counts)).toEqual([
+      { periodId: "lunch", open: true, capacity: 12, guests: 0, groups: 0 },
+      { periodId: "dinner", open: true, capacity: 12, guests: 6, groups: 2 },
+    ]);
+    expect(summarizeDay(config(), WED, new Map()).every((p) => !p.open)).toBe(true);
+  });
+});

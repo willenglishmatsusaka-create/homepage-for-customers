@@ -4,6 +4,12 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-10-01",
   "workers_dev": true,
+  // 台帳の画面（public/admin/）などの静的ファイル。API だけ Worker が先に受ける
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*", "/admin/api/*"]
+  },
   // 予約・顧客・設定の正本。在庫は KV に置かない（同時予約でダブルブッキングするため）
   "d1_databases": [
     {

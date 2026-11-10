@@ -259,3 +259,32 @@ export function listSlots(
   }
   return slots;
 }
+
+export interface PeriodSummary {
+  periodId: string;
+  open: boolean;
+  capacity: number; // 席数の合計
+  guests: number; // 予約の人数（来店済みを含む）
+  groups: number; // 予約の組数
+}
+
+/**
+ * 台帳・カレンダー用：その日の営業枠ごとの予約数と席数。
+ * counts は営業枠ごとの { guests, groups }（キャンセル・無断キャンセルを除いたもの）。
+ */
+export function summarizeDay(
+  config: StoreConfig,
+  date: string,
+  counts: Map<string, { guests: number; groups: number }>,
+): PeriodSummary[] {
+  const capacity = config.seatGroups.reduce((s, g) => s + g.capacity, 0);
+  return [...config.periods]
+    .sort((a, b) => a.sort - b.sort)
+    .map((p) => ({
+      periodId: p.id,
+      open: isPeriodOpen(config, date, p),
+      capacity,
+      guests: counts.get(p.id)?.guests ?? 0,
+      groups: counts.get(p.id)?.groups ?? 0,
+    }));
+}

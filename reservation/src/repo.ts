@@ -481,3 +481,80 @@ export async function deleteOverride(db: D1Database, storeId: string, id: string
   const r = await db.prepare("DELETE FROM date_overrides WHERE id = ? AND store_id = ?").bind(id, storeId).run();
   return (r.meta.changes ?? 0) > 0;
 }
+
+/** 日付・営業枠ごとの予約人数と組数（キャンセル・無断キャンセルを除く） */
+export async function countByDay(
+  db: D1Database,
+  storeId: string,
+  from: string,
+  to: string,
+): Promise<Map<string, Map<string, { guests: number; groups: number }>>> {
+  const { results } = await db
+    .prepare(
+      `SELECT date, COALESCE(period_id, '') AS period_id, SUM(party_size) AS guests, COUNT(*) AS groups
+       FROM reservations WHERE store_id = ? AND date BETWEEN ? AND ? AND status IN ('confirmed', 'seated', 'done')
+       GROUP BY date, period_id`,
+    )
+    .bind(storeId, from, to)
+    .all<{ date: string; period_id: string; guests: number; groups: number }>();
+  const out = new Map<string, Map<string, { guests: number; groups: number }>>();
+  for (const r of results) {
+    if (!out.has(r.date)) out.set(r.date, new Map());
+    out.get(r.date)!.set(r.period_id, { guests: r.guests, groups: r.groups });
+  }
+  return out;
+}
+
+export async function listOverrides(db: D1Database, storeId: string, from: string, to: string) {
+  const { results } = await db
+    .prepare(
+      `SELECT id, date, kind, period_id AS periodId, seat_group_id AS seatGroupId, note
+       FROM date_overrides WHERE store_id = ? AND date BETWEEN ? AND ? ORDER BY date, created_at`,
+    )
+    .bind(storeId, from, to)
+    .all();
+  return results;
+}
+
+export async function getCustomer(db: D1Database, storeId: string, id: string) {
+  const c = await db
+    .prepare(
+      `SELECT id, name, kana, phone, email, lang, allergies, preferences, anniversaries, notes,
+              visit_count, no_show_count, last_visit_date
+       FROM customers WHERE store_id = ? AND id = ?`,
+    )
+    .bind(storeId, id)
+    .first<Record<string, any>>();
+  if (!c) return null;
+  const { results } = await db
+    .prepare(
+      `SELECT id, date, start_min AS startMin, party_size AS partySize, course_id AS courseId, status, source
+       FROM reservations WHERE store_id = ? AND customer_id = ? ORDER BY date DESC, start_min DESC LIMIT 50`,
+    )
+    .bind(storeId, id)
+    .all();
+  return { ...c, anniversaries: parseJson(c.anniversaries, []), history: results };
+}
+
+export async function updateCustomer(
+  db: D1Database,
+  storeId: string,
+  id: string,
+  patch: Partial<Record<"name" | "kana" | "phone" | "email" | "allergies" | "preferences" | "notes", string | null>> & {
+    anniversaries?: { label: string; date: string }[];
+  },
+): Promise<boolean> {
+  const cols: string[] = [];
+  const vals: unknown[] = [];
+  for (const [k, v] of Object.entries(patch)) {
+    if (v === undefined) continue;
+    cols.push(`${k} = ?`);
+    vals.push(k === "anniversaries" ? JSON.stringify(v) : v);
+  }
+  if (cols.length === 0) return true;
+  const r = await db
+    .prepare(`UPDATE customers SET ${cols.join(", ")}, updated_at = datetime('now') WHERE id = ? AND store_id = ?`)
+    .bind(...vals, id, storeId)
+    .run();
+  return (r.meta.changes ?? 0) > 0;
+}
