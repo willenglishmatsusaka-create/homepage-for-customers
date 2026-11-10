@@ -1,8 +1,17 @@
 -- BIEN MANGER の試行用データ（仮）。席数・時間・コース・料金は聞き取り後に正式な値へ置き換える。
+-- theme：予約ページの見た目（ホームページの配色・書体に合わせる）
+-- policy.texts：予約ページに出す文章。キャンセル料の規定は確認中のため、具体的な金額は書いていない
 INSERT INTO stores (id, slug, name, name_en, email, phone, theme, policy) VALUES
-  ('st_bien', 'bien-manger', 'BIEN MANGER', 'BIEN MANGER', NULL, NULL,
-   '{"accent":"#7f2a37","background":"#e9e7e3","ink":"#3b3a37"}',
-   '{"bookingWindowDays":60,"cutoffMinutes":1440,"maxPartyOnline":6}');
+  ('st_bien', 'bien-manger', 'BIEN MANGER', 'BIEN MANGER', NULL, '075-275-1080',
+   '{"accent":"#7f2a37","accentHover":"#962f40","background":"#e9e7e3","surface":"#f3f1ed","ink":"#2c2b29","inkDim":"#5f5c56","line":"rgba(44,43,41,0.16)","heading":"serif","logoSub":"Kyoto · Marutamachi","homepage":"https://bien-manger.jp/"}',
+   '{"bookingWindowDays":60,"cutoffMinutes":1440,"maxPartyOnline":6,
+     "texts":{
+       "cancelPolicy":{
+         "ja":"ご変更・キャンセルは、できるだけお早めにご連絡ください。",
+         "en":"If you need to change or cancel, please let us know as early as possible."},
+       "notices":{
+         "ja":["アレルギー・苦手な食材は、ご予約の際にお知らせください。当日の変更は難しい場合がございます。","カウンターでは料理の香りもお楽しみいただくため、香りの強い香水はお控えください。","大人と同じコースを召し上がれるお子様は、ご一緒にお越しいただけます。","全席禁煙です。"],
+         "en":["Please tell us about any allergies or dislikes when booking. Changes on the day may not be possible.","To let everyone enjoy the aromas at the counter, please avoid strong perfume.","Children who can enjoy the same course as adults are welcome.","The restaurant is non-smoking."]}}}');
 
 -- 12席（仮：カウンター8・テーブル4）。試行期間はネット予約に各2席だけ出す。
 INSERT INTO seat_groups (id, store_id, name_ja, name_en, capacity, online_capacity, min_party, max_party, sort) VALUES

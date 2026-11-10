@@ -19,7 +19,10 @@ export interface Store {
   name: string;
   nameEn: string | null;
   email: string | null;
+  phone: string | null;
   theme: Record<string, string>;
+  /** 予約ページに出す文章（キャンセル規定・ご来店の案内）。ja / en */
+  texts: { cancelPolicy?: { ja?: string; en?: string }; notices?: { ja?: string[]; en?: string[] } };
 }
 
 export interface CourseInfo extends Course {
@@ -59,7 +62,7 @@ const parseJson = <T>(s: string | null, fallback: T): T => {
 
 export async function getStore(db: D1Database, slug: string): Promise<(Store & { policy: string }) | null> {
   const row = await db
-    .prepare("SELECT id, slug, name, name_en, email, theme, policy FROM stores WHERE slug = ?")
+    .prepare("SELECT id, slug, name, name_en, email, phone, theme, policy FROM stores WHERE slug = ?")
     .bind(slug)
     .first<Record<string, string | null>>();
   if (!row) return null;
@@ -69,7 +72,9 @@ export async function getStore(db: D1Database, slug: string): Promise<(Store & {
     name: row.name!,
     nameEn: row.name_en,
     email: row.email,
+    phone: row.phone,
     theme: parseJson(row.theme, {}),
+    texts: parseJson<Record<string, any>>(row.policy, {}).texts ?? {},
     policy: row.policy ?? "{}",
   };
 }

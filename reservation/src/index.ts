@@ -1,6 +1,8 @@
 /**
  * ATSURAE 予約・顧客管理 — Cloudflare Worker（全店共通）
  *
+ * 予約ページ（/r/:store/、/r/:store/manage）… public/book/ の画面を返す
+ *
  * お客様向け（/api/:store/…）
  *   GET  config                    店名・コース・営業枠・受付ルール
  *   GET  calendar?party=&from=&days=  日ごとの空き（カレンダー用）
@@ -57,6 +59,9 @@ import { cleanText, isEmail, normalizePhone, randomToken, safeEqual, sha256Hex }
 
 export interface Env {
   DB: D1Database;
+  ASSETS: Fetcher;
+  TURNSTILE_SITE_KEY?: string;
+  EMAIL_ENABLED?: string; // メール送信を始めたら "true"。予約完了画面の案内が変わる
   ADMIN_TOKEN?: string;
   TURNSTILE_SECRET?: string;
 }
@@ -79,6 +84,20 @@ const REASON_MESSAGES: Record<RejectReason, { ja: string; en: string }> = {
 };
 
 const app = new Hono<AppEnv>();
+
+// 予約ページ：店舗ごとの URL で同じ画面を返す（店舗の判定は画面側で URL から行う）
+const bookingPage = async (c: Context<AppEnv>) => {
+  const store = await getStore(c.env.DB, c.req.param("store")!);
+  if (!store) return c.text("Not found", 404);
+  const res = await c.env.ASSETS.fetch(new URL("/book/", c.req.url));
+  const headers = new Headers(res.headers);
+  headers.set("Cache-Control", "no-cache");
+  headers.set("Referrer-Policy", "no-referrer"); // 予約確認リンクの鍵を外部に送らない
+  return new Response(res.body, { status: res.status, headers });
+};
+app.get("/r/:store", (c) => c.redirect(`/r/${c.req.param("store")}/${new URL(c.req.url).search}`, 301));
+app.get("/r/:store/", bookingPage);
+app.get("/r/:store/manage", bookingPage);
 
 app.onError((err, c) => {
   console.error(err);
@@ -110,8 +129,17 @@ app.get("/api/:store/config", async (c) => {
   const config = await loadConfig(c.env.DB, store, today, today);
   return c.json(
     {
-      store: { slug: store.slug, name: store.name, nameEn: store.nameEn, theme: store.theme },
-      policy: config.policy,
+      store: { slug: store.slug, name: store.name, nameEn: store.nameEn, phone: store.phone, theme: store.theme },
+      policy: {
+        bookingWindowDays: config.policy.bookingWindowDays,
+        cutoffMinutes: config.policy.cutoffMinutes,
+        maxPartyOnline: config.policy.maxPartyOnline,
+      },
+      texts: store.texts,
+      features: {
+        email: c.env.EMAIL_ENABLED === "true",
+        turnstileSiteKey: c.env.TURNSTILE_SITE_KEY ?? null,
+      },
       periods: config.periods.map(({ id, nameJa, nameEn }) => ({ id, nameJa, nameEn })),
       courses: config.courses
         .filter((co) => co.online)
