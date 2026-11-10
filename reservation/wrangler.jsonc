@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "atsurae-reservation",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  // 予約・顧客・設定の正本。在庫は KV に置かない（同時予約でダブルブッキングするため）
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "atsurae-reservation",
+      // 本番の D1 を作ったら ID を入れる：npx wrangler d1 create atsurae-reservation
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ]
+  // シークレット：ADMIN_TOKEN（試行用の店側認証）、TURNSTILE_SECRET（任意）
+}

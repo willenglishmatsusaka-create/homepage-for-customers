@@ -27,6 +27,10 @@ wrangler.jsonc     Cloudflare 設定
 - **トークン未設定時**はデモ用の投稿（固定投稿3本の構成案を含む）を表示します。提案時はこの状態で見せられます。
 - **計測**：予約・電話・地図・Instagram のクリックを Workers Analytics Engine（`bien_manger_events`）に記録。ダッシュボードで Analytics Engine を有効化し、`wrangler.jsonc` のコメントを外すと動きます（未設定時は計測をスキップ）。予約完了数は TableCheck 側の数字と照合してください。
 
+## 自社予約の仕組み（開発中）
+
+`reservation/` に、全店共通の予約・顧客管理 Worker（D1 使用）を作っています。詳しくは [reservation/README.md](reservation/README.md)。
+
 ## デモ公開（Cloudflare）
 
 ```sh
