@@ -19,7 +19,16 @@
       "database_id": "00000000-0000-0000-0000-000000000000",
       "migrations_dir": "migrations"
     }
-  ]
-  // シークレット：ADMIN_TOKEN（試行用の店側認証）、TURNSTILE_SECRET（任意）
-  // 変数：TURNSTILE_SITE_KEY（任意）、EMAIL_ENABLED（メール送信を始めたら "true"）
+  ],
+  // 通知メール（確定・前日リマインド・キャンセル・店への新着）を5分ごとに送る
+  "triggers": { "crons": ["*/5 * * * *"] },
+  "vars": {
+    // 予約ページ・台帳の公開 URL（メールのリンクに使う）
+    "PUBLIC_BASE_URL": "",
+    // 送信元のアドレス（送信サービスで認証したドメイン）。表示名は店名になる
+    "MAIL_FROM": ""
+  }
+  // シークレット：ADMIN_TOKEN（試行用の店側認証）、MANAGE_SECRET（予約確認リンクの鍵を作る秘密の値）、
+  //   RESEND_API_KEY（メール送信。未設定ならメールは送らず「skipped」にする）、TURNSTILE_SECRET（任意）
+  // 変数（任意）：TURNSTILE_SITE_KEY
 }

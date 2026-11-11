@@ -39,3 +39,13 @@ export async function safeEqual(a: string, b: string): Promise<boolean> {
   for (let i = 0; i < ha.length; i++) diff |= ha.charCodeAt(i) ^ hb.charCodeAt(i);
   return diff === 0;
 }
+
+/**
+ * 予約確認リンクの鍵。秘密の値と予約 ID から作るので、保存しなくても後のメール（リマインドなど）で同じリンクを出せる。
+ * データベースには鍵のハッシュだけが残り、秘密の値がなければ鍵は作れない。
+ */
+export async function manageToken(secret: string, reservationId: string): Promise<string> {
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const sig = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`manage:${reservationId}`)));
+  return btoa(String.fromCharCode(...sig.slice(0, 24))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}

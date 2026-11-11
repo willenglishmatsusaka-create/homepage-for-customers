@@ -55,13 +55,13 @@ import {
   updateReservation,
 } from "./repo";
 import { addDays, isValidDate, jstNow, minutesUntil, parseTime } from "./time";
-import { cleanText, isEmail, normalizePhone, randomToken, safeEqual, sha256Hex } from "./util";
+import { mailEnabled, type NotifyEnv, processNotifications } from "./notify";
+import { cleanText, isEmail, manageToken, normalizePhone, randomToken, safeEqual, sha256Hex } from "./util";
 
-export interface Env {
+export interface Env extends NotifyEnv {
   DB: D1Database;
   ASSETS: Fetcher;
   TURNSTILE_SITE_KEY?: string;
-  EMAIL_ENABLED?: string; // メール送信を始めたら "true"。予約完了画面の案内が変わる
   ADMIN_TOKEN?: string;
   TURNSTILE_SECRET?: string;
 }
@@ -137,7 +137,7 @@ app.get("/api/:store/config", async (c) => {
       },
       texts: store.texts,
       features: {
-        email: c.env.EMAIL_ENABLED === "true",
+        email: mailEnabled(c.env),
         turnstileSiteKey: c.env.TURNSTILE_SITE_KEY ?? null,
       },
       periods: config.periods.map(({ id, nameJa, nameEn }) => ({ id, nameJa, nameEn })),
@@ -233,8 +233,8 @@ app.post("/api/:store/reservations", async (c) => {
   const check = checkBooking(config, bookings, req, now);
   if (!check.ok) return reject(c, check.reason, lang);
 
-  const token = randomToken();
   const id = `rs_${crypto.randomUUID()}`;
+  const token = await newManageToken(c.env, id);
   const saved = await insertReservation(c.env.DB, {
     id,
     storeId: store.id,
@@ -263,6 +263,7 @@ app.post("/api/:store/reservations", async (c) => {
   });
   // 確認から保存までの間に他の予約で埋まった場合
   if (!saved) return reject(c, "full", lang);
+  sendSoon(c);
 
   return c.json({ id, manageToken: token, date, startMin, endMin: check.endMin, partySize }, 201);
 });
@@ -293,6 +294,7 @@ app.post("/api/:store/manage/:token/cancel", async (c) => {
     notificationStmt(c.env.DB, store.id, r.id, "cancel"),
     notificationStmt(c.env.DB, store.id, r.id, "owner_cancel"),
   ]);
+  sendSoon(c);
   return c.json({ id: r.id, status: "cancelled" });
 });
 
@@ -305,6 +307,7 @@ app.get("/admin/api/:store/config", async (c) => {
   return c.json({
     store: { slug: store.slug, name: store.name, nameEn: store.nameEn, theme: store.theme },
     today,
+    features: { email: mailEnabled(c.env) },
     policy: config.policy,
     seatGroups: config.seatGroups,
     periods: config.periods,
@@ -394,7 +397,7 @@ app.post("/admin/api/:store/reservations", async (c) => {
   const seatGroupId = check.ok ? check.seatGroupId : (req.seatGroupId ?? fallbackGroup);
 
   const id = `rs_${crypto.randomUUID()}`;
-  const token = email ? randomToken() : null;
+  const token = email ? await newManageToken(c.env, id) : null;
   const actor = "staff"; // 店主ごとのログインを入れたら、ユーザーの ID にする
   const saved = await insertReservation(c.env.DB, {
     id,
@@ -428,6 +431,7 @@ app.post("/admin/api/:store/reservations", async (c) => {
         : [],
   });
   if (!saved) return c.json({ error: "full", canForce: true }, 409);
+  sendSoon(c);
   return c.json({ id, seatGroupId, endMin, forced: !check.ok }, 201);
 });
 
@@ -449,6 +453,7 @@ app.patch("/admin/api/:store/reservations/:id", async (c) => {
       ? [notificationStmt(c.env.DB, store.id, current.id, "cancel")]
       : [];
   await updateReservation(c.env.DB, current, store.id, "staff", patch, extra);
+  if (extra.length) sendSoon(c);
   return c.json(await getReservation(c.env.DB, store.id, current.id));
 });
 
@@ -571,4 +576,23 @@ async function verifyTurnstile(secret: string, token: unknown, ip: string | unde
   return data.success === true;
 }
 
-export default app;
+/** 予約確認リンクの鍵。MANAGE_SECRET があれば後のメールでも同じリンクを作れる形にする */
+async function newManageToken(env: Env, reservationId: string): Promise<string> {
+  return env.MANAGE_SECRET ? manageToken(env.MANAGE_SECRET, reservationId) : randomToken();
+}
+
+/** 予約の直後に確定メールなどを送る（応答は待たせない）。送れなかった分は Cron が拾う */
+function sendSoon(c: Context<AppEnv>) {
+  try {
+    c.executionCtx.waitUntil(processNotifications(c.env, { limit: 10 }).catch((e) => console.error("notify", e)));
+  } catch {
+    /* executionCtx がない環境（テストなど）では Cron に任せる */
+  }
+}
+
+export default {
+  fetch: app.fetch,
+  async scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext) {
+    ctx.waitUntil(processNotifications(env).then((r) => console.log("notify", JSON.stringify(r))));
+  },
+} satisfies ExportedHandler<Env>;

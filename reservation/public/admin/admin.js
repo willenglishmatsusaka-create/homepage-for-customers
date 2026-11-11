@@ -789,6 +789,7 @@ async function renderSettings() {
         <dl class="kv">
           ${cfg.periods.map((p) => `<dt>${esc(p.nameJa)}</dt><dd>${p.startTimes.map(fmtTime).join("・")} 入店（最終 ${fmtTime(p.lastEntry)}）<br><span class="hint">${days(p.weekdays)}${closedDays(p.weekdays).length ? `／定休 ${closedDays(p.weekdays).join("・")}` : ""}</span></dd>`).join("")}
           ${cfg.seatGroups.map((g) => `<dt>${esc(g.nameJa)}</dt><dd>${g.capacity}席（ネット予約に ${g.onlineCapacity}席）</dd>`).join("")}
+          <dt>メール</dt><dd>${cfg.features?.email ? "確定・前日リマインド・キャンセルのメールを送っています" : "まだ送っていません（送信の設定前）"}</dd>
           <dt>ネット予約</dt><dd>${cfg.policy.bookingWindowDays}日先まで・${cfg.policy.cutoffMinutes >= 1440 ? `${Math.round(cfg.policy.cutoffMinutes / 1440)}日前` : `${cfg.policy.cutoffMinutes}分前`}に締切・${cfg.policy.maxPartyOnline}名まで</dd>
         </dl>
         <div class="hint" style="margin-top:10px">コース：${cfg.courses.map((c) => esc(c.nameJa)).join("、")}</div>
