@@ -27,3 +27,7 @@ INSERT INTO courses (id, store_id, name_ja, name_en, price, duration, min_party,
   ('co_lunch',  'st_bien', 'ランチコース',   'Lunch course',  NULL, 120, 1, 6, NULL, '["sp_lunch"]',  1),
   ('co_dinner', 'st_bien', 'ディナーコース', 'Dinner course', NULL, 150, 1, 6, NULL, '["sp_dinner"]', 2),
   ('co_wagyu',  'st_bien', '銘柄和牛のコース', 'Wagyu course', NULL, 150, 2, 6, 6,  '["sp_dinner"]', 3);
+
+-- 台帳にログインできる人（仮）。実際の店主のメールアドレスに置き換える
+INSERT INTO store_users (id, store_id, email, role) VALUES
+  ('su_bien_owner', 'st_bien', 'owner@example.com', 'owner');

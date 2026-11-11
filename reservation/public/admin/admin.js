@@ -14,6 +14,7 @@ const SOURCE = {
 const STAFF_SOURCES = ["phone", "walkin", "tabelog", "ikyu", "tablecheck", "other"];
 const STATUS = { confirmed: "予約", seated: "来店中", done: "退店済み", cancelled: "キャンセル", no_show: "無断キャンセル" };
 const STATUS_BADGE = { confirmed: "", seated: "badge-good", done: "", cancelled: "badge-bad", no_show: "badge-bad" };
+const MAIL_KIND = { confirm: "確定", remind: "前日のご案内", cancel: "キャンセル" };
 const OVERRIDE = { closed: "臨時休業", open: "臨時営業", block: "席を閉じる" };
 const REASON = {
   full: "この時間は満席です",
@@ -28,11 +29,14 @@ const WD = ["日", "月", "火", "水", "木", "金", "土"];
 // ---------- 状態 ----------
 
 const state = {
-  store: store_get("store") || "bien-manger",
-  token: store_get("token") || "",
+  store: store_get("store") || "",
+  token: store_get("token") || "", // ATSURAE の保守用パスワードで入るときだけ使う
+  authed: false,
+  me: null, // メールでログインしているときの { email, stores }
   config: null,
   showOff: false,
 };
+const ROLE = { owner: "店主", staff: "スタッフ" };
 
 function store_get(k) {
   try { return localStorage.getItem(`ledger:${k}`); } catch { return null; }
@@ -94,14 +98,29 @@ class ApiError extends Error {
 async function api(path, { method = "GET", body } = {}) {
   const res = await fetch(`/admin/api/${encodeURIComponent(state.store)}${path}`, {
     method,
-    headers: { Authorization: `Bearer ${state.token}`, ...(body ? { "content-type": "application/json" } : {}) },
+    headers: { ...(state.token ? { Authorization: `Bearer ${state.token}` } : {}), ...(body ? { "content-type": "application/json" } : {}) },
     body: body ? JSON.stringify(body) : undefined,
   });
   const data = await res.json().catch(() => ({}));
   if (res.status === 401) {
-    logout("パスワードが違うか、変更されました。もう一度入力してください。");
+    logout(state.token ? "パスワードが違うか、変更されました。" : "ログインの期限が切れました。もう一度ログインしてください。");
     throw new ApiError(401, data);
   }
+  if (res.status === 403 && data.error === "forbidden") {
+    logout("この店の台帳に入る権限がありません。店主に追加してもらってください。");
+    throw new ApiError(403, data);
+  }
+  if (!res.ok) throw new ApiError(res.status, data);
+  return data;
+}
+
+async function authPost(path, body) {
+  const res = await fetch(`/admin/auth${path}`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body ?? {}),
+  });
+  const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new ApiError(res.status, data);
   return data;
 }
@@ -150,7 +169,7 @@ const loading = () => '<div class="loading">読み込み中…</div>';
 let currentDate = todayJst();
 
 function route() {
-  if (!state.token) return renderLogin();
+  if (!state.authed) return start();
   if (!state.config) return boot();
   const [view, arg] = location.hash.replace(/^#/, "").split("/");
   closeSheet();
@@ -181,24 +200,87 @@ async function boot() {
   }
 }
 
-// ---------- ログイン（試行用：共通のパスワード） ----------
+// ---------- ログイン（メールで届くリンクか6桁のコード） ----------
+
+async function start() {
+  $app.innerHTML = loading();
+  // メールのボタンから開いたとき：#login=<鍵>
+  const m = /login=([\w-]+)/.exec(location.hash);
+  if (m) {
+    history.replaceState(null, "", location.pathname);
+    try { return afterLogin(await authPost("/verify", { token: m[1] })); } catch {
+      return renderLogin("リンクの期限が切れているか、すでに使われています。もう一度メールを送ってください。");
+    }
+  }
+  if (state.token) { state.authed = true; return boot(); }
+  try {
+    const res = await fetch("/admin/auth/me");
+    if (res.ok) return afterLogin(await res.json());
+  } catch { /* 通信できないときもログイン画面を出す */ }
+  renderLogin();
+}
+
+function afterLogin(me) {
+  state.me = me;
+  if (!me.stores?.length) { logout("このメールアドレスで入れる台帳がありません。"); return; }
+  const saved = store_get("store");
+  state.store = me.stores.find((x) => x.slug === saved)?.slug || me.stores[0].slug;
+  store_set("store", state.store);
+  state.authed = true;
+  state.config = null;
+  if (!/^#(day|cal|customers|customer|settings)/.test(location.hash)) history.replaceState(null, "", "#day");
+  boot();
+}
 
 function renderLogin(message = "") {
   $app.innerHTML = `
-    <form class="login" data-form="login">
+    <form class="login" data-form="login-email">
       <h1>予約台帳</h1>
-      <p>お店の ID とパスワードを入力してください。この端末に保存されます。</p>
+      <p>登録しているメールアドレスを入力してください。ログイン用のコードをお送りします。</p>
+      ${message ? `<div class="banner banner-bad">${esc(message)}</div>` : ""}
+      <label class="field"><span class="label">メールアドレス</span>
+        <input class="input" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" value="${esc(state.loginEmail || "")}" required></label>
+      <button class="btn btn-primary btn-block" type="submit">コードを送る</button>
+      <button class="btn btn-ghost btn-block" type="button" data-act="token-login" style="margin-top:28px;font-size:13px;font-weight:500">ATSURAE の管理用パスワードで入る</button>
+    </form>`;
+}
+
+function renderCode(email, message = "") {
+  $app.innerHTML = `
+    <form class="login" data-form="login-code">
+      <h1>コードを入力</h1>
+      <p>${esc(email)} にメールを送りました。届いた6桁のコードを入力するか、メールのボタンを押してください。</p>
+      ${message ? `<div class="banner banner-bad">${esc(message)}</div>` : ""}
+      <label class="field"><span class="label">6桁のコード</span>
+        <input class="input" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="\\d{6}" maxlength="6" required
+          style="font-size:26px;letter-spacing:.3em;text-align:center;font-variant-numeric:tabular-nums"></label>
+      <button class="btn btn-primary btn-block" type="submit">ログイン</button>
+      <p class="hint" style="margin-top:16px">メールが届かないときは、迷惑メールのフォルダも確かめてください。コードは15分で切れます。</p>
+      <button class="btn btn-ghost btn-block" type="button" data-act="login-again">メールアドレスを入れ直す</button>
+    </form>`;
+  $app.querySelector("[name=code]").focus();
+}
+
+function renderTokenLogin(message = "") {
+  $app.innerHTML = `
+    <form class="login" data-form="login">
+      <h1>管理用のログイン</h1>
+      <p>ATSURAE の保守用です。お店の ID とパスワードを入力してください。この端末に保存されます。</p>
       ${message ? `<div class="banner banner-bad">${esc(message)}</div>` : ""}
       <label class="field"><span class="label">お店の ID</span>
         <input class="input" name="store" value="${esc(state.store)}" autocapitalize="off" autocomplete="username" required></label>
       <label class="field"><span class="label">パスワード</span>
         <input class="input" name="token" type="password" autocomplete="current-password" required></label>
       <button class="btn btn-primary btn-block" type="submit">はじめる</button>
+      <button class="btn btn-ghost btn-block" type="button" data-act="login-again" style="margin-top:8px">メールでログインする</button>
     </form>`;
 }
 
 function logout(message) {
+  if (!state.token) fetch("/admin/auth/logout", { method: "POST" }).catch(() => {});
   state.token = "";
+  state.authed = false;
+  state.me = null;
   state.config = null;
   store_set("token", null);
   closeSheet();
@@ -305,6 +387,7 @@ function flags(r) {
   if (c && c.visitCount > 0) out.push(`<span class="badge">${c.visitCount}回来店</span>`);
   else if (c) out.push('<span class="badge">はじめて</span>');
   if (c?.noShowCount > 0) out.push(`<span class="badge badge-bad">無断キャンセル${c.noShowCount}回</span>`);
+  if (r.mailFailed?.length) out.push('<span class="badge badge-bad">メール未着</span>');
   return out.join("");
 }
 
@@ -376,6 +459,7 @@ function openReservation(id) {
         <dt>経路</dt><dd>${SOURCE[r.source]}</dd>
         ${c?.phone ? `<dt>電話</dt><dd><a href="tel:${esc(c.phone)}">${esc(localPhone(c.phone))}</a></dd>` : ""}
         ${c?.email ? `<dt>メール</dt><dd>${esc(c.email)}</dd>` : ""}
+        ${r.mailFailed?.length ? `<dt>メール未着</dt><dd><span class="badge badge-bad" style="white-space:normal;line-height:1.4">${r.mailFailed.map((k) => MAIL_KIND[k] || k).join("・")}のメールが届きませんでした。アドレスを確かめて、お電話でご連絡ください</span></dd>` : ""}
         ${c?.allergies ? `<dt>アレルギー</dt><dd><span class="badge badge-warn" style="white-space:normal;line-height:1.4">${esc(c.allergies)}</span></dd>` : ""}
         ${ann ? `<dt>記念日</dt><dd>${ann}</dd>` : ""}
         ${r.guestNote ? `<dt>ご要望</dt><dd>${esc(r.guestNote)}</dd>` : ""}
@@ -766,7 +850,9 @@ function annRow(a) {
 async function renderSettings() {
   $app.innerHTML = shell({ tab: "settings", title: "設定", body: loading() });
   try {
-    const { overrides } = await api(`/overrides?from=${todayJst()}`);
+    const [{ overrides }, { users }] = await Promise.all([api(`/overrides?from=${todayJst()}`), api("/users")]);
+    const me = state.config.user || {};
+    const isOwner = me.role === "owner";
     const cfg = state.config;
     const days = (bits) => WD.filter((_, i) => bits & (1 << i)).join("・");
     const closedDays = (bits) => WD.filter((_, i) => !(bits & (1 << i)));
@@ -796,7 +882,23 @@ async function renderSettings() {
       </div>
       <p class="hint">営業時間・席数・コースの変更は ATSURAE にご連絡ください。</p>
 
+      <h2 class="section-title">台帳に入れる人</h2>
+      <div class="list" style="margin-top:0">
+        ${users.map((u) => `
+          <div class="card row">
+            <div class="main-col"><div class="title" style="overflow-wrap:anywhere">${esc(u.email)}</div><div class="sub">${ROLE[u.role] || u.role}${u.email === me.email ? "（あなた）" : ""}</div></div>
+            ${isOwner && u.email !== me.email ? `<button class="btn btn-sm btn-danger" data-del-user="${u.id}" data-email="${esc(u.email)}">外す</button>` : ""}
+          </div>`).join("")}
+      </div>
+      ${isOwner ? '<button class="btn btn-block" data-act="add-user" style="margin-top:10px">スタッフを追加する</button>' : '<p class="hint">追加・削除は店主ができます。</p>'}
+      <p class="hint">追加した人は、自分のメールアドレスでログインできるようになります。</p>
+
       <h2 class="section-title">この端末</h2>
+      <div class="card" style="padding:14px;margin-bottom:10px;font-size:14px">
+        ${me.via === "token" ? "ATSURAE の管理用パスワードで入っています。" : `${esc(me.email)} でログインしています（${ROLE[me.role] || ""}）。`}
+      </div>
+      ${state.me?.stores?.length > 1 ? `<div class="chip-row" style="margin-bottom:10px">${state.me.stores.map((x) =>
+        `<button class="chip chip-sm" data-switch-store="${esc(x.slug)}" aria-pressed="${x.slug === state.store}">${esc(x.name)}</button>`).join("")}</div>` : ""}
       <button class="btn btn-block btn-danger" data-act="logout">ログアウト</button>`;
   } catch (e) { showError(e); }
 }
@@ -865,6 +967,33 @@ function openOverride() {
   });
 }
 
+function openAddUser() {
+  openSheet(`
+    <form data-form="add-user" data-role="staff">
+      <div class="sheet-head"><h2>スタッフを追加する</h2>
+        <button type="button" class="icon-btn" data-act="close" aria-label="閉じる">${ICON.close}</button></div>
+      <label class="field"><span class="label">メールアドレス</span>
+        <input class="input" name="email" type="email" inputmode="email" autocapitalize="off" required></label>
+      <div class="field"><span class="label">役割</span><div class="chip-row">
+        <button type="button" class="chip chip-sm" data-role-pick="staff" aria-pressed="true">スタッフ</button>
+        <button type="button" class="chip chip-sm" data-role-pick="owner" aria-pressed="false">店主</button></div>
+        <div class="hint">店主はスタッフの追加・削除もできます。</div></div>
+      <button class="btn btn-primary btn-block" type="submit">追加する</button>
+    </form>`, {
+    onOpen: (root) => {
+      const form = root.querySelector("form");
+      root.addEventListener("click", (e) => {
+        const b = e.target.closest("[data-role-pick]");
+        if (!b) return;
+        form.dataset.role = b.dataset.rolePick;
+        root.querySelectorAll("[data-role-pick]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      });
+      // シートは #app の外にあるので、送信はここで #app の処理に渡す
+      form.addEventListener("submit", (e) => { e.preventDefault(); $app.dispatchEvent(new CustomEvent("sheet-submit", { detail: form })); });
+    },
+  });
+}
+
 // ---------- シート ----------
 
 let sheetHandlers = null;
@@ -918,7 +1047,7 @@ document.addEventListener("keydown", (e) => {
 // ---------- 画面の操作 ----------
 
 $app.addEventListener("click", async (e) => {
-  const el = e.target.closest("[data-act], [data-go], [data-day], [data-res], [data-quick], [data-customer], [data-del-override], [data-add-ann], [data-del-ann]");
+  const el = e.target.closest("[data-act], [data-go], [data-day], [data-res], [data-quick], [data-customer], [data-del-override], [data-add-ann], [data-del-ann], [data-del-user], [data-switch-store]");
   if (!el) return;
 
   if (el.dataset.quick) {
@@ -935,6 +1064,21 @@ $app.addEventListener("click", async (e) => {
   if (el.dataset.customer) return go(`#customer/${el.dataset.customer}`);
   if (el.dataset.addAnn) { document.getElementById("anns").insertAdjacentHTML("beforeend", annRow({})); return; }
   if (el.dataset.delAnn) { el.closest(".ann").remove(); return; }
+  if (el.dataset.switchStore) {
+    state.store = el.dataset.switchStore;
+    store_set("store", state.store);
+    state.config = null;
+    history.replaceState(null, "", "#day");
+    return boot();
+  }
+  if (el.dataset.delUser) {
+    if (!(await confirmSheet(`${esc(el.dataset.email)} を台帳から外しますか？この人はログインできなくなります。`, "外す", true))) return;
+    try { await api(`/users/${el.dataset.delUser}`, { method: "DELETE" }); toast("外しました"); renderSettings(); } catch (err) {
+      if (err instanceof ApiError && err.data?.error === "last_owner") toast("店主が一人もいなくなるため外せません");
+      else showError(err);
+    }
+    return;
+  }
   if (el.dataset.delOverride) {
     if (!(await confirmSheet("この設定を取り消しますか？", "取り消す", true))) return;
     try { await api(`/overrides/${el.dataset.delOverride}`, { method: "DELETE" }); toast("取り消しました"); renderSettings(); } catch (err) { showError(err); }
@@ -946,6 +1090,9 @@ $app.addEventListener("click", async (e) => {
     case "reload": return state.config ? route() : boot();
     case "toggle-off": state.showOff = !state.showOff; document.querySelector(".main").innerHTML = dayBody(dayData); return;
     case "add-override": return openOverride();
+    case "token-login": return renderTokenLogin();
+    case "login-again": return renderLogin();
+    case "add-user": return openAddUser();
     case "logout":
       if (await confirmSheet("この端末からログアウトしますか？", "ログアウト", true)) logout("");
       return;
@@ -962,8 +1109,35 @@ $app.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && e.target.dataset?.res) openReservation(e.target.dataset.res);
 });
 
-$app.addEventListener("submit", async (e) => {
+$app.addEventListener("sheet-submit", (e) => onSubmit({ target: e.detail, preventDefault() {} }));
+$app.addEventListener("submit", (e) => onSubmit(e));
+async function onSubmit(e) {
   const form = e.target;
+  if (form.dataset.form === "login-email") {
+    e.preventDefault();
+    const email = form.email.value.trim();
+    state.loginEmail = email;
+    form.querySelector("[type=submit]").disabled = true;
+    try {
+      await authPost("/login", { email });
+      renderCode(email);
+    } catch (err) {
+      if (err instanceof ApiError && err.data?.error === "mail_disabled") renderLogin("メール送信の設定前のため、まだメールでログインできません。ATSURAE にご連絡ください。");
+      else if (err instanceof ApiError && err.status === 400) renderLogin("メールアドレスを確かめてください。");
+      else renderLogin("つながりませんでした。電波を確かめてください。");
+    }
+  }
+  if (form.dataset.form === "login-code") {
+    e.preventDefault();
+    form.querySelector("[type=submit]").disabled = true;
+    try {
+      afterLogin(await authPost("/verify", { email: state.loginEmail, code: form.code.value }));
+    } catch (err) {
+      renderCode(state.loginEmail, err instanceof ApiError && err.status === 401
+        ? "コードが違うか、期限が切れています。5回まちがえると使えなくなります。"
+        : "つながりませんでした。電波を確かめてください。");
+    }
+  }
   if (form.dataset.form === "login") {
     e.preventDefault();
     state.store = form.store.value.trim();
@@ -972,11 +1146,25 @@ $app.addEventListener("submit", async (e) => {
       await api("/config");
       store_set("store", state.store);
       store_set("token", state.token);
+      state.authed = true;
       history.replaceState(null, "", "#day");
       boot();
     } catch (err) {
-      if (err instanceof ApiError && err.status === 404) renderLogin("店舗が見つかりません。お店の ID を確かめてください。");
-      else if (!(err instanceof ApiError && err.status === 401)) renderLogin("つながりませんでした。電波を確かめてください。");
+      if (err instanceof ApiError && err.status === 404) renderTokenLogin("店舗が見つかりません。お店の ID を確かめてください。");
+      else if (!(err instanceof ApiError && err.status === 401)) renderTokenLogin("つながりませんでした。電波を確かめてください。");
+    }
+  }
+  if (form.dataset.form === "add-user") {
+    e.preventDefault();
+    try {
+      await api("/users", { method: "POST", body: { email: form.email.value, role: form.dataset.role || "staff" } });
+      closeSheet();
+      toast(`${form.email.value} を追加しました`);
+      renderSettings();
+    } catch (err) {
+      if (err instanceof ApiError && err.data?.error === "already_exists") toast("このアドレスはもう登録されています");
+      else if (err instanceof ApiError && err.status === 400) toast("メールアドレスを確かめてください");
+      else showError(err);
     }
   }
   if (form.dataset.form === "customer") {
@@ -995,7 +1183,7 @@ $app.addEventListener("submit", async (e) => {
       else showError(err);
     }
   }
-});
+}
 
 // 画面に戻ってきたら最新にする（他の端末やネット予約の分を反映）
 document.addEventListener("visibilitychange", () => {

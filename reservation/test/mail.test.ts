@@ -100,3 +100,13 @@ describe("manageToken", () => {
     expect(await sha256Hex(a)).toHaveLength(64);
   });
 });
+
+describe("buildLoginMail", () => {
+  it("コードと期限とリンクが入り、ホーム画面のアプリではコードを使うよう案内する", async () => {
+    const { buildLoginMail } = await import("../src/mail");
+    const m = buildLoginMail({ to: "owner@example.com", link: "https://r.example/admin/#login=abc", code: "012345", storeNames: ["BIEN MANGER"] });
+    expect(m.subject).toBe("台帳へのログイン（コード 012345）");
+    for (const s of ["BIEN MANGER の予約台帳", "012345", "15分", "#login=abc", "ホーム画面に追加", "心当たりがない"]) expect(m.text).toContain(s);
+    expect(m.text).not.toContain("お店に届きます");
+  });
+});

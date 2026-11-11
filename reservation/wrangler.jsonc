@@ -8,7 +8,7 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*", "/admin/api/*", "/r/*"]
+    "run_worker_first": ["/api/*", "/admin/api/*", "/admin/auth/*", "/r/*"]
   },
   // 予約・顧客・設定の正本。在庫は KV に置かない（同時予約でダブルブッキングするため）
   "d1_databases": [
@@ -28,7 +28,7 @@
     // 送信元のアドレス（送信サービスで認証したドメイン）。表示名は店名になる
     "MAIL_FROM": ""
   }
-  // シークレット：ADMIN_TOKEN（試行用の店側認証）、MANAGE_SECRET（予約確認リンクの鍵を作る秘密の値）、
+  // シークレット：ADMIN_TOKEN（ATSURAE の保守用。台帳の店主・スタッフはメールでログインする）、MANAGE_SECRET（予約確認リンクの鍵を作る秘密の値）、
   //   RESEND_API_KEY（メール送信。未設定ならメールは送らず「skipped」にする）、TURNSTILE_SECRET（任意）
   // 変数（任意）：TURNSTILE_SITE_KEY
 }

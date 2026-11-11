@@ -11,7 +11,12 @@
  *   GET  manage/:token             予約の確認
  *   POST manage/:token/cancel      予約のキャンセル
  *
- * お店向け（/admin/api/:store/…、Authorization: Bearer ADMIN_TOKEN）
+ * ログイン（/admin/auth/…）
+ *   POST login {email} → メールでリンクと6桁のコードを送る / POST verify {token} か {email, code} → クッキー
+ *   GET  me → ログイン中の人と見られる店 / POST logout
+ *
+ * お店向け（/admin/api/:store/…）：ログインのクッキー（その店の store_users にある人）
+ *   または Authorization: Bearer ADMIN_TOKEN（ATSURAE の保守用）
  *   GET   config                   営業設定（席・営業枠・コース・受付ルール）
  *   GET   summary?from=&days=      日ごと・営業枠ごとの予約数と席数（カレンダー用）
  *   GET   reservations?date=       その日の予約（台帳）と営業枠ごとの集計
@@ -20,11 +25,25 @@
  *   GET   customers?q=             顧客検索（名前・ふりがな・電話番号）
  *   GET   customers/:id / PATCH customers/:id  顧客の詳細と来店履歴、メモなどの更新
  *   GET   overrides?from=&to= / POST overrides / DELETE overrides/:id  臨時休業・臨時営業・席を閉じる
- *
- * ADMIN_TOKEN は試行用の仮の認証。店主ごとのログイン（メールのリンク）に置き換える予定。
+ *   GET   users / POST users / DELETE users/:id  台帳に入れる人（追加・削除は店主だけ）
  */
 
 import { Hono, type Context } from "hono";
+import { getCookie } from "hono/cookie";
+import {
+  type AuthEnv,
+  endSession,
+  getSession,
+  normalizeEmail,
+  requestLogin,
+  type Role,
+  roleFor,
+  SESSION_COOKIE,
+  SESSION_MAX_AGE,
+  sessionCookie,
+  storesFor,
+  verifyLogin,
+} from "./auth";
 import {
   type BookingRequest,
   checkBooking,
@@ -58,7 +77,7 @@ import { addDays, isValidDate, jstNow, minutesUntil, parseTime } from "./time";
 import { mailEnabled, type NotifyEnv, processNotifications } from "./notify";
 import { cleanText, isEmail, manageToken, normalizePhone, randomToken, safeEqual, sha256Hex } from "./util";
 
-export interface Env extends NotifyEnv {
+export interface Env extends AuthEnv {
   DB: D1Database;
   ASSETS: Fetcher;
   TURNSTILE_SITE_KEY?: string;
@@ -67,7 +86,8 @@ export interface Env extends NotifyEnv {
 }
 
 type Store = NonNullable<Awaited<ReturnType<typeof getStore>>>;
-type AppEnv = { Bindings: Env; Variables: { store: Store } };
+type User = { email: string; role: Role; via: "session" | "token" };
+type AppEnv = { Bindings: Env; Variables: { store: Store; user: User } };
 
 const STAFF_SOURCES: Source[] = ["phone", "walkin", "tablecheck", "ikyu", "tabelog", "other"];
 const STATUSES: Status[] = ["confirmed", "seated", "done", "cancelled", "no_show"];
@@ -114,11 +134,68 @@ const withStore = async (c: Context<AppEnv>, next: () => Promise<void>) => {
 
 app.use("/api/:store/*", withStore);
 app.use("/admin/api/:store/*", async (c, next) => {
-  const expected = c.env.ADMIN_TOKEN;
-  if (!expected) return c.json({ error: "admin_not_configured" }, 503);
-  const given = c.req.header("Authorization")?.replace(/^Bearer\s+/i, "") ?? "";
-  if (!(await safeEqual(given, expected))) return c.json({ error: "unauthorized" }, 401);
-  return withStore(c, next);
+  const store = await getStore(c.env.DB, c.req.param("store")!);
+  const bearer = c.req.header("Authorization")?.replace(/^Bearer\s+/i, "");
+  let user: User | null = null;
+
+  if (bearer) {
+    // ATSURAE の保守用（全店に入れる）
+    if (c.env.ADMIN_TOKEN && (await safeEqual(bearer, c.env.ADMIN_TOKEN))) user = { email: "atsurae", role: "owner", via: "token" };
+    else return c.json({ error: "unauthorized" }, 401);
+  } else {
+    const session = await getSession(c.env, getCookie(c, SESSION_COOKIE));
+    if (!session) return c.json({ error: "unauthorized" }, 401);
+    // クッキーで入っているときは、他のサイトからの書き換えを受けない
+    if (c.req.method !== "GET" && !sameOrigin(c)) return c.json({ error: "bad_origin" }, 403);
+    if (!store) return c.json({ error: "store_not_found" }, 404);
+    const role = await roleFor(c.env.DB, store.id, session.email);
+    if (!role) return c.json({ error: "forbidden" }, 403);
+    user = { email: session.email, role, via: "session" };
+  }
+  if (!store) return c.json({ error: "store_not_found" }, 404);
+  c.set("store", store);
+  c.set("user", user);
+  await next();
+});
+
+// ---------- ログイン ----------
+
+app.post("/admin/auth/login", async (c) => {
+  if (!sameOrigin(c)) return c.json({ error: "bad_origin" }, 403);
+  const body = await readJson(c);
+  const email = normalizeEmail(body?.email);
+  if (!email) return c.json({ error: "invalid_body", fields: ["email"] }, 400);
+  const r = await requestLogin(c.env, email, new URL(c.req.url).origin);
+  if (r === "mail_disabled") return c.json({ error: "mail_disabled" }, 503);
+  // 登録のないアドレス・送りすぎでも同じ答え（登録の有無を外から調べられないように）
+  return c.json({ ok: true });
+});
+
+app.post("/admin/auth/verify", async (c) => {
+  if (!sameOrigin(c)) return c.json({ error: "bad_origin" }, 403);
+  const body = await readJson(c);
+  const ua = c.req.header("User-Agent") ?? null;
+  let res: Awaited<ReturnType<typeof verifyLogin>> = null;
+  if (typeof body?.token === "string") res = await verifyLogin(c.env, { token: body.token }, ua);
+  else {
+    const email = normalizeEmail(body?.email);
+    if (email && typeof body?.code === "string") res = await verifyLogin(c.env, { email, code: body.code.trim() }, ua);
+  }
+  if (!res) return c.json({ error: "invalid_login" }, 401);
+  c.header("Set-Cookie", sessionCookie(res.sessionId, SESSION_MAX_AGE));
+  return c.json({ email: res.email, stores: await storesFor(c.env.DB, res.email) });
+});
+
+app.get("/admin/auth/me", async (c) => {
+  const session = await getSession(c.env, getCookie(c, SESSION_COOKIE));
+  if (!session) return c.json({ error: "unauthorized" }, 401);
+  return c.json({ email: session.email, stores: await storesFor(c.env.DB, session.email) });
+});
+
+app.post("/admin/auth/logout", async (c) => {
+  await endSession(c.env, getCookie(c, SESSION_COOKIE));
+  c.header("Set-Cookie", sessionCookie("", 0));
+  return c.json({ ok: true });
 });
 
 // ---------- お客様向け ----------
@@ -308,6 +385,7 @@ app.get("/admin/api/:store/config", async (c) => {
     store: { slug: store.slug, name: store.name, nameEn: store.nameEn, theme: store.theme },
     today,
     features: { email: mailEnabled(c.env) },
+    user: { email: c.get("user").email, role: c.get("user").role, via: c.get("user").via },
     policy: config.policy,
     seatGroups: config.seatGroups,
     periods: config.periods,
@@ -398,7 +476,7 @@ app.post("/admin/api/:store/reservations", async (c) => {
 
   const id = `rs_${crypto.randomUUID()}`;
   const token = email ? await newManageToken(c.env, id) : null;
-  const actor = "staff"; // 店主ごとのログインを入れたら、ユーザーの ID にする
+  const actor = c.get("user").email;
   const saved = await insertReservation(c.env.DB, {
     id,
     storeId: store.id,
@@ -452,7 +530,7 @@ app.patch("/admin/api/:store/reservations/:id", async (c) => {
     patch.status === "cancelled" && current.status !== "cancelled" && current.customer?.email
       ? [notificationStmt(c.env.DB, store.id, current.id, "cancel")]
       : [];
-  await updateReservation(c.env.DB, current, store.id, "staff", patch, extra);
+  await updateReservation(c.env.DB, current, store.id, c.get("user").email, patch, extra);
   if (extra.length) sendSoon(c);
   return c.json(await getReservation(c.env.DB, store.id, current.id));
 });
@@ -531,6 +609,55 @@ app.delete("/admin/api/:store/overrides/:id", async (c) => {
   return ok ? c.json({ ok }) : c.json({ error: "not_found" }, 404);
 });
 
+app.get("/admin/api/:store/users", async (c) => {
+  const { results } = await c.env.DB
+    .prepare("SELECT id, email, role, created_at AS createdAt FROM store_users WHERE store_id = ? ORDER BY role, email")
+    .bind(c.get("store").id)
+    .all();
+  return c.json({ users: results });
+});
+
+app.post("/admin/api/:store/users", async (c) => {
+  if (c.get("user").role !== "owner") return c.json({ error: "owner_only" }, 403);
+  const body = await readJson(c);
+  const email = normalizeEmail(body?.email);
+  const role: Role = body?.role === "owner" ? "owner" : "staff";
+  if (!email) return c.json({ error: "invalid_body", fields: ["email"] }, 400);
+  const id = `su_${crypto.randomUUID()}`;
+  const r = await c.env.DB
+    .prepare("INSERT INTO store_users (id, store_id, email, role) VALUES (?, ?, ?, ?) ON CONFLICT (store_id, email) DO NOTHING")
+    .bind(id, c.get("store").id, email, role)
+    .run();
+  if ((r.meta.changes ?? 0) === 0) return c.json({ error: "already_exists" }, 409);
+  return c.json({ id, email, role }, 201);
+});
+
+app.delete("/admin/api/:store/users/:id", async (c) => {
+  if (c.get("user").role !== "owner") return c.json({ error: "owner_only" }, 403);
+  const storeId = c.get("store").id;
+  const target = await c.env.DB
+    .prepare("SELECT email, role FROM store_users WHERE id = ? AND store_id = ?")
+    .bind(c.req.param("id"), storeId)
+    .first<{ email: string; role: Role }>();
+  if (!target) return c.json({ error: "not_found" }, 404);
+  if (target.email === c.get("user").email) return c.json({ error: "cannot_remove_self" }, 409);
+  if (target.role === "owner") {
+    const owners = await c.env.DB
+      .prepare("SELECT COUNT(*) AS n FROM store_users WHERE store_id = ? AND role = 'owner'")
+      .bind(storeId)
+      .first<{ n: number }>();
+    if ((owners?.n ?? 0) <= 1) return c.json({ error: "last_owner" }, 409);
+  }
+  // 台帳に入れなくするだけでなく、その人のログイン中の端末も他の店に入れない限り切る
+  await c.env.DB.batch([
+    c.env.DB.prepare("DELETE FROM store_users WHERE id = ?").bind(c.req.param("id")),
+    c.env.DB
+      .prepare("DELETE FROM sessions WHERE email = ? AND NOT EXISTS (SELECT 1 FROM store_users WHERE email = ? AND id <> ?)")
+      .bind(target.email, target.email, c.req.param("id")),
+  ]);
+  return c.json({ ok: true });
+});
+
 app.notFound((c) => c.json({ error: "not_found" }, 404));
 
 // ---------- 補助 ----------
@@ -574,6 +701,17 @@ async function verifyTurnstile(secret: string, token: unknown, ip: string | unde
   const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body: form });
   const data = (await res.json()) as { success?: boolean };
   return data.success === true;
+}
+
+/** 書き換えの依頼が同じサイトの画面から来たか（Origin がないときは、ブラウザ以外からとみなして通す） */
+function sameOrigin(c: Context<AppEnv>): boolean {
+  const origin = c.req.header("Origin");
+  if (!origin) return c.req.header("Sec-Fetch-Site") !== "cross-site";
+  try {
+    return new URL(origin).host === new URL(c.req.url).host;
+  } catch {
+    return false;
+  }
 }
 
 /** 予約確認リンクの鍵。MANAGE_SECRET があれば後のメールでも同じリンクを作れる形にする */

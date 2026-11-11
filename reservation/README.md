@@ -57,7 +57,15 @@
 | お客様 | 名前・ふりがな・電話番号で検索。アレルギー・お好み・記念日・メモの編集、来店の履歴 |
 | 設定 | 臨時休業・臨時営業・席を閉じる（貸切やグルメサイト用の確保）の追加と取り消し。営業時間・席数・コースの確認 |
 
-ログインは試行用の共通パスワード（`ADMIN_TOKEN`）で、端末に保存します。店主ごとのログインに置き換える予定です。
+### ログイン
+
+- 店主・スタッフは、登録したメールアドレスでログインします。届いたメールのボタンを押すか、6桁のコードを台帳の画面に入力します（ホーム画面に追加した台帳は Safari とクッキーが別なので、コードを使います）
+- リンクとコードは15分で切れ、1回だけ使えます。コードは5回まちがえると使えません。同じアドレスへの送信は1時間に5回まで
+- ログインすると、その端末は30日間ログインしたままになります（使うたびに延びる）。クッキーは HttpOnly・Secure・SameSite=Lax で、書き換えの依頼は同じサイトからのものだけ受けます
+- どの店の台帳に入れるかは `store_users`（店ごとのメールアドレスと役割）で決めます。店主は 設定 → 台帳に入れる人 でスタッフを追加・削除できます。外した人のログインはその場で切れます
+- 予約の作成者・変更の記録には、ログインした人のメールアドレスが残ります
+- `ADMIN_TOKEN` は ATSURAE の保守用として残しています（ログイン画面の「ATSURAE の管理用パスワードで入る」）
+- 最初の店主は ATSURAE が登録します：`INSERT INTO store_users (id, store_id, email, role) VALUES ('su_…', 'st_…', '店主のアドレス', 'owner')`
 画面に戻るたびに最新の予約を読み直すので、ネット予約や別の端末で入れた予約も反映されます。
 
 ## できていること（段階1：台帳とAPI）
@@ -73,7 +81,6 @@
 
 - お店のホームページ（`bien-manger.jp/reserve/`）から予約ページへの接続
 - メールの本番送信（Resend のドメイン認証と鍵の登録。手順は上の「メールを送り始めるとき」）
-- 店主ごとのログイン（今は試行用の `ADMIN_TOKEN` 1つ）
 - 予約の日時の変更（今はキャンセルして入れ直す）
 - カード登録（Stripe Connect）、中国語・韓国語、集計
 
@@ -91,10 +98,10 @@
 ```sh
 cd reservation
 npm install
-echo 'ADMIN_TOKEN=local-test-token' > .dev.vars
+printf 'ADMIN_TOKEN=local-test-token\nMANAGE_SECRET=local-secret\nDEV_LOGIN_LINKS=true\n' > .dev.vars
 npm run db:migrate:local
 npm run db:seed:local          # BIEN MANGER の仮データ
-npm run dev                    # → http://localhost:8787/admin/ が台帳（お店の ID：bien-manger、パスワード：local-test-token）
+npm run dev                    # → http://localhost:8787/admin/ が台帳（owner@example.com でログイン。コードは dev のログに出る）
                                #   http://localhost:8787/r/bien-manger/ が予約ページ
 npm test                       # 空き計算のテスト
 ```

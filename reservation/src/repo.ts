@@ -308,6 +308,8 @@ export interface ReservationRow {
   guestNote: string | null;
   staffNote: string | null;
   lang: string;
+  /** お客様に届かなかったメール（confirm / remind / cancel）。電話で連絡するための目印 */
+  mailFailed: string[];
   customer: {
     id: string;
     name: string;
@@ -325,7 +327,9 @@ export interface ReservationRow {
 const RESERVATION_SELECT = `
   SELECT r.*, c.id AS c_id, c.name AS c_name, c.kana AS c_kana, c.phone AS c_phone, c.email AS c_email,
          c.allergies AS c_allergies, c.anniversaries AS c_anniversaries, c.notes AS c_notes,
-         c.visit_count AS c_visit_count, c.no_show_count AS c_no_show_count
+         c.visit_count AS c_visit_count, c.no_show_count AS c_no_show_count,
+         (SELECT group_concat(n.kind) FROM notifications n
+           WHERE n.reservation_id = r.id AND n.status = 'failed' AND n.kind IN ('confirm', 'remind', 'cancel')) AS mail_failed
   FROM reservations r LEFT JOIN customers c ON c.id = r.customer_id`;
 
 function toReservation(r: Record<string, any>): ReservationRow {
@@ -344,6 +348,7 @@ function toReservation(r: Record<string, any>): ReservationRow {
     guestNote: r.guest_note,
     staffNote: r.staff_note,
     lang: r.lang,
+    mailFailed: r.mail_failed ? String(r.mail_failed).split(",") : [],
     customer: r.c_id
       ? {
           id: r.c_id,

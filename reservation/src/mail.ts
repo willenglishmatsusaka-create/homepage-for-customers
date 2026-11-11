@@ -244,3 +244,18 @@ function render(to: string, subject: string, blocks: Block[], store: MailInput["
 function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 }
+
+/** 台帳へのログイン用メール（日本語） */
+export function buildLoginMail(input: { to: string; link: string; code: string; storeNames: string[] }): MailMessage {
+  const subject = `台帳へのログイン（コード ${input.code}）`;
+  const stores = input.storeNames.join("・");
+  const blocks: Block[] = [
+    { t: "p", text: `${stores} の予約台帳へのログインです。下のボタンを押すか、ログイン画面で6桁のコードを入力してください。` },
+    { t: "kv", rows: [["コード", input.code], ["有効期限", "このメールが届いてから15分"]] },
+    { t: "link", label: "台帳にログインする", url: input.link },
+    { t: "p", text: "ホーム画面に追加した台帳を使っている場合は、ボタンではなく、台帳の画面でコードを入力してください。" },
+    { t: "p", text: "心当たりがない場合は、このメールを無視してください。ログインはされません。" },
+  ];
+  const m = render(input.to, subject, blocks, { name: "予約台帳", nameEn: null, phone: null, email: null, homepage: null, accent: null, texts: {} }, "ja", true);
+  return m;
+}
