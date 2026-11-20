@@ -8,7 +8,9 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*"]
+    "run_worker_first": ["/api/*"],
+    // 存在しないURLは public/404.html（英語は public/en/404.html）を表示
+    "not_found_handling": "404-page"
   },
   "vars": {
     // Instagram のユーザー名（@ なし）
@@ -19,5 +21,20 @@
   // クリック計測を使う場合は、ダッシュボードで Analytics Engine を有効化してから追加:
   // "analytics_engine_datasets": [{ "binding": "EVENTS", "dataset": "bien_manger_events" }],
   // Instagram の投稿キャッシュと更新済みトークンの保存先
-  "kv_namespaces": [{ "binding": "IG_KV", "id": "2532561a5c7f405bb4028b59c90a7715" }]
+  "kv_namespaces": [{ "binding": "IG_KV", "id": "2532561a5c7f405bb4028b59c90a7715" }],
+
+  // 本番（bien-manger.jp）: npx wrangler deploy --env production
+  // 先に Cloudflare に bien-manger.jp のゾーンを追加し、ネームサーバーを切り替えておく
+  "env": {
+    "production": {
+      "name": "bien-manger",
+      "workers_dev": false,
+      "routes": [
+        { "pattern": "bien-manger.jp", "custom_domain": true },
+        { "pattern": "www.bien-manger.jp", "custom_domain": true }
+      ],
+      "vars": { "IG_USERNAME": "bien_manger_kyoto" },
+      "kv_namespaces": [{ "binding": "IG_KV", "id": "2532561a5c7f405bb4028b59c90a7715" }]
+    }
+  }
 }

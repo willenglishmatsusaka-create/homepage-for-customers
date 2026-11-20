@@ -27,6 +27,17 @@ wrangler.jsonc     Cloudflare 設定
 - **トークン未設定時**はデモ用の投稿（固定投稿3本の構成案を含む）を表示します。提案時はこの状態で見せられます。
 - **計測**：予約・電話・地図・Instagram のクリックを Workers Analytics Engine（`bien_manger_events`）に記録。ダッシュボードで Analytics Engine を有効化し、`wrangler.jsonc` のコメントを外すと動きます（未設定時は計測をスキップ）。予約完了数は TableCheck 側の数字と照合してください。
 
+## 本番公開（bien-manger.jp）
+
+- `public/` の HTML がそのまま公開されます（ページを直すときは `public/` を直接編集）。
+- `python3 tools/finalize.py`：デモ表示の帯と「要確認」タグを外し、canonical・hreflang・OGP を本番URLにして、`sitemap.xml` と `robots.txt` を書き出します。何度実行しても同じ結果です。
+- 存在しないURLは `public/404.html`（英語は `public/en/404.html`）を表示します。
+- 本番デプロイ：Cloudflare に bien-manger.jp のゾーンを追加し、ムームーでネームサーバーを切り替えてから
+
+```sh
+npx wrangler deploy --env production   # bien-manger.jp と www.bien-manger.jp に公開
+```
+
 ## デモ公開（Cloudflare）
 
 ```sh
