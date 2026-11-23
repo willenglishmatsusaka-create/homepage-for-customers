@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <title>予約一覧</title>
+  <link rel="stylesheet" href="/assets/booking.css">
+  <style>
+    .page { max-width: 880px; }
+    .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .bar button, .row button, .add summary {
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 6px 12px; font: inherit; font-size: 13px; color: inherit; cursor: pointer;
+    }
+    .day-block { margin-bottom: 20px; }
+    .day-block h2 { font-size: 14px; font-weight: 500; margin: 0 0 6px; padding-bottom: 4px; border-bottom: 1px solid var(--line); }
+    .row {
+      display: grid; grid-template-columns: 6.5em 1fr auto; gap: 4px 12px; align-items: start;
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 6px; font-size: 14px;
+    }
+    .row .t { font-variant-numeric: tabular-nums; font-weight: 500; }
+    .row .who { min-width: 0; overflow-wrap: anywhere; }
+    .row .who small { display: block; color: var(--ink-soft); font-size: 12px; }
+    .row.cancelled { opacity: 0.45; }
+    .row.cancelled .t::after { content: " 取消"; font-weight: 400; font-size: 11px; }
+    .none { color: var(--ink-soft); font-size: 13px; margin: 0 0 6px; }
+    .add { margin-bottom: 24px; }
+    .add form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 12px; }
+    .add select { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); font: inherit; }
+    #login { max-width: 360px; margin: 40px auto; display: grid; gap: 12px; }
+  </style>
+</head>
+<body>
+<main class="page">
+  <header class="shop-head">
+    <h1 id="shop-name">予約一覧</h1>
+    <p>店主用の画面です</p>
+  </header>
+
+  <form id="login" hidden>
+    <div class="field">
+      <label for="token">合言葉</label>
+      <input id="token" type="password" autocomplete="current-password" required>
+    </div>
+    <p class="message error" id="login-error" hidden></p>
+    <button class="submit" type="submit">開く</button>
+  </form>
+
+  <div id="app" hidden>
+    <div class="bar">
+      <button type="button" id="prev">‹ 前の週</button>
+      <strong id="range"></strong>
+      <button type="button" id="next">次の週 ›</button>
+    </div>
+
+    <details class="add">
+      <summary>電話・店頭の予約を書き込む／予約を止める</summary>
+      <form id="add-form">
+        <div class="field"><label for="a-date">日付</label><input id="a-date" type="date" required></div>
+        <div class="field"><label for="a-time">開始時刻</label><input id="a-time" type="time" step="900" required></div>
+        <div class="field"><label for="a-menu">メニュー（所要時間）</label><select id="a-menu"></select></div>
+        <div class="field"><label for="a-name">お名前（空なら「店頭・電話のご予約」）</label><input id="a-name" maxlength="50"></div>
+        <div class="field"><label for="a-phone">電話</label><input id="a-phone" type="tel" maxlength="20"></div>
+        <div class="field"><label for="a-note">メモ</label><input id="a-note" maxlength="500"></div>
+        <button class="submit" type="submit">書き込む</button>
+      </form>
+      <p class="message" id="add-message" hidden></p>
+    </details>
+
+    <div id="list"></div>
+  </div>
+</main>
+<script>
+  const slug = location.pathname.split('/').filter(Boolean)[1];
+  const $ = (id) => document.getElementById(id);
+  const WEEK = '日月火水木金土';
+  const todayJst = () => new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
+  const addDays = (date, n) => new Date(Date.parse(`${date}T00:00:00Z`) + n * 864e5).toISOString().slice(0, 10);
+  const jpDate = (date) => {
+    const [, m, d] = date.split('-').map(Number);
+    return `${m}月${d}日（${WEEK[new Date(`${date}T00:00:00Z`).getUTCDay()]}）`;
+  };
+  let token = '';
+  try { token = sessionStorage.getItem(`atsurae-admin-${slug}`) || ''; } catch {}
+  let from = todayJst();
+
+  async function call(path, options = {}) {
+    const res = await fetch(`/api/admin/${slug}${path}`, {
+      ...options,
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.status === 401) { logout(data.error); throw new Error(data.error); }
+    if (!res.ok) throw new Error(data.error || '通信に失敗しました。');
+    return data;
+  }
+
+  function logout(message) {
+    token = '';
+    try { sessionStorage.removeItem(`atsurae-admin-${slug}`); } catch {}
+    $('app').hidden = true;
+    $('login').hidden = false;
+    if (message) Object.assign($('login-error'), { textContent: message, hidden: false });
+  }
+
+  async function load() {
+    const data = await call(`/bookings?from=${from}&days=7`);
+    $('login').hidden = true;
+    $('app').hidden = false;
+    $('shop-name').textContent = data.shop;
+    $('range').textContent = `${jpDate(from)}〜${jpDate(addDays(from, 6))}`;
+    if (!$('a-menu').options.length) {
+      data.menus.forEach((m) => $('a-menu').append(new Option(`${m.name}（${m.duration_min}分）`, m.id)));
+      $('a-date').value = todayJst();
+    }
+
+    const list = $('list');
+    list.innerHTML = '';
+    for (let i = 0; i < 7; i++) {
+      const date = addDays(from, i);
+      const block = document.createElement('section');
+      block.className = 'day-block';
+      block.append(Object.assign(document.createElement('h2'), { textContent: jpDate(date) }));
+      const items = data.bookings.filter((b) => b.start_at.startsWith(date));
+      if (!items.length) block.append(Object.assign(document.createElement('p'), { className: 'none', textContent: '予約はありません' }));
+      items.forEach((b) => block.append(row(b)));
+      list.append(block);
+    }
+  }
+
+  function row(b) {
+    const el = document.createElement('div');
+    el.className = `row${b.status === 'cancelled' ? ' cancelled' : ''}`;
+    const t = document.createElement('div');
+    t.className = 't';
+    t.textContent = `${b.start_at.slice(11)}〜${b.end_at.slice(11)}`;
+    const who = document.createElement('div');
+    who.className = 'who';
+    who.textContent = `${b.customer_name}　${b.menu_name}`;
+    const detail = [b.customer_phone, b.customer_email, b.note].filter(Boolean).join('　');
+    if (detail) who.append(Object.assign(document.createElement('small'), { textContent: detail }));
+    el.append(t, who);
+    if (b.status === 'confirmed') {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = '取消';
+      btn.addEventListener('click', async () => {
+        // 押し間違いを防ぐため、1回目は確認の表示にする
+        if (!btn.dataset.confirm) { btn.dataset.confirm = '1'; btn.textContent = 'もう一度押すと取消'; return; }
+        btn.disabled = true;
+        try { await call(`/bookings/${b.id}/cancel`, { method: 'POST' }); load(); }
+        catch (e) { btn.disabled = false; btn.textContent = e.message; }
+      });
+      el.append(btn);
+    } else {
+      el.append(document.createElement('span'));
+    }
+    return el;
+  }
+
+  $('login').addEventListener('submit', (e) => {
+    e.preventDefault();
+    token = $('token').value.trim();
+    try { sessionStorage.setItem(`atsurae-admin-${slug}`, token); } catch {}
+    $('login-error').hidden = true;
+    load().catch(() => {});
+  });
+  $('prev').addEventListener('click', () => { from = addDays(from, -7); load(); });
+  $('next').addEventListener('click', () => { from = addDays(from, 7); load(); });
+  $('add-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = $('add-message');
+    try {
+      await call('/bookings', {
+        method: 'POST',
+        body: JSON.stringify({
+          date: $('a-date').value, time: $('a-time').value, menu_id: $('a-menu').value,
+          name: $('a-name').value, phone: $('a-phone').value, note: $('a-note').value,
+        }),
+      });
+      Object.assign(msg, { textContent: '書き込みました。', className: 'message ok', hidden: false });
+      e.target.reset();
+      $('a-date').value = todayJst();
+      load();
+    } catch (err) {
+      Object.assign(msg, { textContent: err.message, className: 'message error', hidden: false });
+    }
+  });
+
+  if (token) load().catch(() => {}); else logout();
+</script>
+</body>
+</html>

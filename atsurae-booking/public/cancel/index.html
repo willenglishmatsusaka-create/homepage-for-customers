@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <title>ご予約の確認・キャンセル</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/booking.css">
+</head>
+<body>
+<main class="page">
+  <header class="shop-head">
+    <h1 id="shop-name">ご予約の確認</h1>
+  </header>
+  <section class="step">
+    <dl class="summary" id="summary"></dl>
+  </section>
+  <p class="message" id="message" hidden></p>
+  <section class="step" id="actions" hidden>
+    <p class="policy" id="deadline"></p>
+    <button class="submit" type="button" id="cancel">この予約をキャンセルする</button>
+  </section>
+  <p class="foot">予約システム：ATSURAE by Will</p>
+</main>
+<script>
+  const token = location.pathname.split('/').filter(Boolean)[1];
+  const $ = (id) => document.getElementById(id);
+  const WEEK = '日月火水木金土';
+  const jp = (dt) => {
+    const [date, time] = dt.split('T');
+    const [, m, d] = date.split('-').map(Number);
+    return `${m}月${d}日（${WEEK[new Date(`${date}T00:00:00Z`).getUTCDay()]}）${time}`;
+  };
+  const show = (text, kind) => Object.assign($('message'), { textContent: text, className: `message ${kind}`, hidden: false });
+
+  async function load() {
+    const res = await fetch(`/api/bookings/${token}`);
+    const b = await res.json().catch(() => ({}));
+    if (!res.ok) return show(b.error || 'ご予約が見つかりません。', 'error');
+    $('shop-name').textContent = b.shop;
+    const rows = [['お名前', `${b.name} 様`], ['日時', jp(b.start)], ['メニュー', b.menu], ['状態', b.status === 'confirmed' ? 'ご予約中' : 'キャンセル済み']];
+    $('summary').innerHTML = '';
+    rows.forEach(([k, v]) => {
+      $('summary').append(Object.assign(document.createElement('dt'), { textContent: k }));
+      $('summary').append(Object.assign(document.createElement('dd'), { textContent: v }));
+    });
+    if (b.cancellable) {
+      $('deadline').textContent = `キャンセルは ${jp(b.cancel_deadline)} まで、この画面からできます。`;
+      $('actions').hidden = false;
+    } else if (b.status === 'confirmed') {
+      show(`この画面からのキャンセル期限を過ぎています。お手数ですが、お店${b.shop_phone ? `（${b.shop_phone}）` : ''}にお電話ください。`, 'error');
+    }
+  }
+
+  $('cancel').addEventListener('click', async () => {
+    // 押し間違いを防ぐため、1回目は確認の表示にする
+    if (!$('cancel').dataset.confirm) {
+      $('cancel').dataset.confirm = '1';
+      $('cancel').textContent = 'もう一度押すとキャンセルします';
+      return;
+    }
+    $('cancel').disabled = true;
+    const res = await fetch(`/api/bookings/${token}/cancel`, { method: 'POST' });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      $('cancel').disabled = false;
+      return show(data.error || 'キャンセルできませんでした。', 'error');
+    }
+    $('actions').hidden = true;
+    show('ご予約をキャンセルしました。確認のメールをお送りしました。', 'ok');
+    load();
+  });
+
+  load();
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "atsurae-booking",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    // 予約・キャンセル・店主用の画面と API は Worker が受ける
+    "run_worker_first": ["/api/*", "/book/*", "/cancel/*", "/admin/*"]
+  },
+  "vars": {
+    // メールの差出人。Resend で送信元ドメインを認証してから書き換える
+    "MAIL_FROM": "ATSURAE 予約 <booking@atsurae-will.com>",
+    // 予約完了メールなどに載せるリンクの先頭部分
+    "PUBLIC_URL": "https://atsurae-booking.example.workers.dev"
+  },
+  // 本番では `npx wrangler d1 create atsurae-booking` で作り、出てきた database_id に差し替える
+  "d1_databases": [
+    { "binding": "DB", "database_name": "atsurae-booking", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrations" }
+  ]
+}

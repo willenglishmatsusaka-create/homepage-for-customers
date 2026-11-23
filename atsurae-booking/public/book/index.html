@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <title>ご予約</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/booking.css">
+</head>
+<body>
+<main class="page">
+  <header class="shop-head">
+    <h1 id="shop-name">ご予約</h1>
+    <p id="shop-sub"></p>
+  </header>
+
+  <div id="booking">
+    <section class="step" id="step-menu">
+      <h2><span class="num">1</span>メニューを選ぶ</h2>
+      <div class="menus" id="menus"><p class="empty">読み込んでいます…</p></div>
+    </section>
+
+    <section class="step" id="step-day" aria-disabled="true">
+      <h2><span class="num">2</span>日にちを選ぶ</h2>
+      <div class="days-nav">
+        <button type="button" id="prev-week">‹ 前の週</button>
+        <span id="range"></span>
+        <button type="button" id="next-week">次の週 ›</button>
+      </div>
+      <div class="days" id="days"></div>
+    </section>
+
+    <section class="step" id="step-time" aria-disabled="true">
+      <h2><span class="num">3</span>時間を選ぶ</h2>
+      <div class="times" id="times"><p class="empty">日にちを選ぶと、空いている時間が表示されます。</p></div>
+    </section>
+
+    <section class="step" id="step-form" aria-disabled="true">
+      <h2><span class="num">4</span>お客様の情報</h2>
+      <form class="form" id="form" novalidate>
+        <dl class="summary" id="summary"></dl>
+        <div class="field">
+          <label for="name">お名前<span class="req">必須</span></label>
+          <input id="name" name="name" autocomplete="name" maxlength="50" required>
+        </div>
+        <div class="field">
+          <label for="email">メールアドレス<span class="req">必須</span></label>
+          <input id="email" name="email" type="email" autocomplete="email" maxlength="120" required>
+        </div>
+        <div class="field">
+          <label for="phone">電話番号<span class="req">必須</span></label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="20" required>
+        </div>
+        <div class="field">
+          <label for="note">ご要望（任意）</label>
+          <textarea id="note" name="note" maxlength="500" placeholder="ご希望の髪型、指名など"></textarea>
+        </div>
+        <div class="hp" aria-hidden="true">
+          <label for="website">このまま空にしてください</label>
+          <input id="website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        <p class="policy" id="policy"></p>
+        <p class="message error" id="error" hidden></p>
+        <button class="submit" id="submit" type="submit">この内容で予約する</button>
+      </form>
+    </section>
+  </div>
+
+  <section class="done" id="done" hidden>
+    <h2>ご予約を承りました</h2>
+    <p>確認のメールをお送りしました。キャンセルは、メールに書かれたリンクからできます。</p>
+    <dl class="summary" id="done-summary"></dl>
+  </section>
+
+  <p class="foot">予約システム：ATSURAE by Will</p>
+</main>
+<script src="/assets/book.js" defer></script>
+</body>
+</html>
