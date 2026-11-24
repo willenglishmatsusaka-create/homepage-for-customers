@@ -196,6 +196,10 @@ h1, h2, h3, .hero-lead { word-break: auto-phrase; }
 .works { padding-bottom: 80px; }
 .work-feature { display: grid; grid-template-columns: 1.35fr 1fr; gap: 64px; align-items: center; }
 .devices { position: relative; padding: 0 0 40px; }
+.work-feature.is-reverse { margin-top: 112px; grid-template-columns: 1fr 1.35fr; }
+.work-feature.is-reverse .devices { order: 2; }
+.work-feature.is-reverse + .screens { margin-top: 56px; }
+.work-text dd a { color: inherit; text-decoration-color: var(--accent); text-underline-offset: 3px; }
 .device-laptop { border: 10px solid #222; border-bottom-width: 14px; border-radius: 10px 10px 0 0; background: #222; box-shadow: 0 30px 60px -30px rgba(31, 42, 58, 0.6); overflow: hidden; }
 .device-laptop::after { content: ""; display: block; height: 0; }
 .device-phone { position: absolute; right: -24px; bottom: 0; width: 26%; border: 7px solid #222; border-radius: 22px; background: #222; overflow: hidden; box-shadow: 0 24px 40px -20px rgba(31, 42, 58, 0.7); }
@@ -215,7 +219,7 @@ h1, h2, h3, .hero-lead { word-break: auto-phrase; }
 
 .screens { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 .screens figure { overflow: hidden; background: var(--white); border: 1px solid var(--line); }
-.screens img { transition: transform 0.8s var(--ease); }
+.screens img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; transition: transform 0.8s var(--ease); }
 .screens figure:hover img { transform: scale(1.04); }
 .screens figcaption { font-size: 12px; letter-spacing: 0.12em; padding: 10px 14px; color: var(--ink-soft); }
 
@@ -398,6 +402,8 @@ h1, h2, h3, .hero-lead { word-break: auto-phrase; }
   .pc { display: none; }
 
   .intro-grid, .work-feature, .row, .faq-grid, .monitor { grid-template-columns: 1fr; gap: 40px; }
+  .work-feature.is-reverse { grid-template-columns: 1fr; margin-top: 72px; }
+  .work-feature.is-reverse .devices { order: 0; }
   .row { gap: 28px; }
   .row:nth-child(even) .row-img { order: 0; }
   .rows { gap: 64px; }
