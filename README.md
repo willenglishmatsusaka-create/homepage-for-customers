@@ -32,11 +32,8 @@ wrangler.jsonc     Cloudflare 設定
 - `public/` の HTML がそのまま公開されます（ページを直すときは `public/` を直接編集）。
 - `python3 tools/finalize.py`：デモ表示の帯と「要確認」タグを外し、canonical・hreflang・OGP を本番URLにして、`sitemap.xml` と `robots.txt` を書き出します。何度実行しても同じ結果です。
 - 存在しないURLは `public/404.html`（英語は `public/en/404.html`）を表示します。
-- 本番デプロイ：Cloudflare に bien-manger.jp のゾーンを追加し、ムームーでネームサーバーを切り替えてから
-
-```sh
-npx wrangler deploy --env production   # bien-manger.jp と www.bien-manger.jp に公開
-```
+- 本番：Worker `bien-manger-demo` に bien-manger.jp と www.bien-manger.jp をカスタムドメインとして接続済み（2026-11-27）。GitHub へのプッシュで自動デプロイされ、workers.dev のデモURLと本番ドメインの両方に反映されます。
+- DNS は Cloudflare（ネームサーバー adi / kurt.ns.cloudflare.com、ドメインの管理はムームードメイン）。
 
 ## デモ公開（Cloudflare）
 

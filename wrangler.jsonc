@@ -23,18 +23,9 @@
   // Instagram の投稿キャッシュと更新済みトークンの保存先
   "kv_namespaces": [{ "binding": "IG_KV", "id": "2532561a5c7f405bb4028b59c90a7715" }],
 
-  // 本番（bien-manger.jp）: npx wrangler deploy --env production
-  // 先に Cloudflare に bien-manger.jp のゾーンを追加し、ネームサーバーを切り替えておく
-  "env": {
-    "production": {
-      "name": "bien-manger",
-      "workers_dev": false,
-      "routes": [
-        { "pattern": "bien-manger.jp", "custom_domain": true },
-        { "pattern": "www.bien-manger.jp", "custom_domain": true }
-      ],
-      "vars": { "IG_USERNAME": "bien_manger_kyoto" },
-      "kv_namespaces": [{ "binding": "IG_KV", "id": "2532561a5c7f405bb4028b59c90a7715" }]
-    }
-  }
+  // 本番ドメイン（2026-11-27 にダッシュボードで追加済み）。デプロイしても外れないよう設定にも書いておく
+  "routes": [
+    { "pattern": "bien-manger.jp", "custom_domain": true },
+    { "pattern": "www.bien-manger.jp", "custom_domain": true }
+  ]
 }
