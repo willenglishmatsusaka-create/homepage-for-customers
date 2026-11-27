@@ -18,8 +18,8 @@
   },
   // 30分ごとに最新投稿を取得
   "triggers": { "crons": ["*/30 * * * *"] },
-  // クリック計測を使う場合は、ダッシュボードで Analytics Engine を有効化してから追加:
-  // "analytics_engine_datasets": [{ "binding": "EVENTS", "dataset": "bien_manger_events" }],
+  // 予約・電話・地図・Instagram のクリック計測（Analytics Engine、2026-11-27 有効化）
+  "analytics_engine_datasets": [{ "binding": "EVENTS", "dataset": "bien_manger_events" }],
   // Instagram の投稿キャッシュと更新済みトークンの保存先
   "kv_namespaces": [{ "binding": "IG_KV", "id": "2532561a5c7f405bb4028b59c90a7715" }],
 
